@@ -1,0 +1,14 @@
+site:
+  title: "StatusTracker"
+
+server:
+  files:
+    dev:
+      contentRoot: "build/processedResources/js/main/public"
+      script: "build/kotlin-webpack/js/developmentExecutable/statustracker.js"
+      api: "build/libs/statustracker.jar"
+    prod:
+      script: "build/kotlin-webpack/js/productionExecutable/statustracker.js"
+      siteRoot: ".kobweb/site"
+
+  port: 8080
