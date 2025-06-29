@@ -1,4 +1,4 @@
-import com.varabyte.kobweb.gradle.application.util.configAsKobwebApplication
+   import com.varabyte.kobweb.gradle.application.util.configAsKobwebApplication
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -32,10 +32,14 @@ kotlin {
             implementation(libs.compose.runtime)
             implementation(libs.compose.html.core)
             implementation(libs.kobweb.core)
+            implementation(libs.kobweb.core.js)
             implementation(libs.kobweb.silk)
+            implementation(libs.kobweb.silk.js)
+            implementation(libs.silk.foundation)
+            implementation(libs.kobweb.silk.widgets)
             // This default template uses built-in SVG icons, but what's available is limited.
             // Uncomment the following if you want access to a large set of font-awesome icons:
-            // implementation(libs.silk.icons.fa)
+             implementation(libs.silk.icons.fa)
             implementation(libs.kobwebx.markdown)
         }
 
