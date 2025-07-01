@@ -39,7 +39,8 @@ import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 
 
 @Composable
-fun LoginSection(onForgotPasswordClick: () -> Unit) {
+fun LoginSection(onForgotPasswordClick: () -> Unit, onSignInClick:(email: String, password: String) -> Unit = { _, _ -> }) {
+//fun LoginSection(onForgotPasswordClick: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var emailError by remember { mutableStateOf("") }
@@ -144,6 +145,7 @@ fun LoginSection(onForgotPasswordClick: () -> Unit) {
 
                 if (emailError.isEmpty() && passwordError.isEmpty()) {
                     println("Login successful!")
+                    onSignInClick(email, password)
                 }
             },
             modifier = Modifier.fillMaxWidth().backgroundColor(Color("#007BFF")).color(Colors.White).borderRadius(8.px).padding(12.px)
@@ -233,11 +235,16 @@ private fun validatePassword(password: String): String {
     if (password.isEmpty()) {
         return "Password cannot be empty."
     }
-    if (password.length < 8) {
+    if (password.length < 5) {
         return "Password must be at least 8 characters long."
     }
 
-    var hasUppercase = false
+    var hasUppercase = true
+    var hasLowercase = true
+    var hasDigit = true
+    var hasSpecialChar = true
+
+    /*var hasUppercase = false
     var hasLowercase = false
     var hasDigit = false
     var hasSpecialChar = false
@@ -249,7 +256,7 @@ private fun validatePassword(password: String): String {
             char.isDigit() -> hasDigit = true
             !char.isLetterOrDigit() && !char.isWhitespace() -> hasSpecialChar = true
         }
-    }
+    }*/
 
     if (!hasUppercase) return "Password must contain at least one uppercase letter."
     if (!hasLowercase) return "Password must contain at least one lowercase letter."

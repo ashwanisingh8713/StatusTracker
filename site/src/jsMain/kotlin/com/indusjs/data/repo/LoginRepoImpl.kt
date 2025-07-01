@@ -21,17 +21,18 @@ class LoginRepoImpl(private val endPoint: String,
     override suspend fun signIn(param: Any?): SignInResponse {
         val bodyParam = param as? SignInRequestBody
         val response: HttpResponse = httpClient.post() {
-            url("$endPoint/auth/register")
+            url("$endPoint/auth/login")
             setBody(bodyParam)
             contentType(ContentType.Application.Json)
         }
         return if(response.status.isSuccess()) {
             response.body<SignInResponse>()
         } else {
-            SignInResponse(
+            throw IllegalArgumentException(response.status.toString())
+            /*SignInResponse(
                 success = false,
                 message = response.status.toString(),
-            )
+            )*/
         }
     }
 

@@ -17,17 +17,22 @@ class SignInViewModule(private val signInUseCase: SignInUseCase, private val cor
     )
     val loginState: StateFlow<SignInState> get() = _loginState
 
+    val getCoroutineScope: CoroutineScope get() = coroutineScope
+
     fun signInRequest(email: String, password: String) {
+        println("signInRequest()")
         // Loading state is initiated
         _loginState.value.copy(signInResponse = ResourceUiState.Loading)
         val bodyParam = SignInRequestBody(email, password)
         coroutineScope.launch {
             signInUseCase(bodyParam)
                 .onSuccess<SignInResponse> {
-                    _loginState.value.copy(signInResponse = ResourceUiState.Success(it))
+                    println("signInRequest() onSuccess()")
+                    _loginState.value = _loginState.value.copy(signInResponse = ResourceUiState.Success(it))
                 }
                 .onFailure{
-                    _loginState.value.copy(signInResponse = ResourceUiState.Error(it.message))
+                    println("signInRequest() onFailure() -> "+it.message)
+                    _loginState.value = _loginState.value.copy(signInResponse = ResourceUiState.Error(it.message))
                 }
         }
     }

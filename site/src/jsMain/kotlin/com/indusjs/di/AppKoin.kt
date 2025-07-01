@@ -4,10 +4,13 @@ import com.indusjs.data.repo.ProfileRepoImpl
 import com.indusjs.data.repo.LoginRepoImpl
 import com.indusjs.domain.repo.IUserRepository
 import com.indusjs.domain.usecase.login.SignInUseCase
+import com.indusjs.domain.usecase.login.SignUpUseCase
 import com.indusjs.repository.ILoginRepo
 import com.indusjs.repository.IProfileRepo
 import com.indusjs.repository.UserRepositoryImpl
 import com.indusjs.statustracker.viewmodel.SignInViewModule
+import com.indusjs.statustracker.viewmodel.SignUpViewModel
+//import com.indusjs.statustracker.viewmodel.SignUpViewModule
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.DEFAULT
@@ -44,6 +47,8 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
 
 val viewModelModule: Module = module {
     factory { SignInViewModule(get(), get()) }
+    factory { SignUpViewModel(get(), get()) }
+    //factory { com.indusjs.statustracker.viewmodel.SignUpViewModule(get(), get()) }
     /*factory { SignUpViewModel(get()) }
     factory { EditProfileViewModel(get()) }
     factory { GetProfileViewModel(get()) }*/
@@ -51,6 +56,7 @@ val viewModelModule: Module = module {
 
 val useCasesModule: Module = module {
     factory{ SignInUseCase(get(), get()) }
+    factory { SignUpUseCase(get(), get()) }
     /*factory { ForgotPasswordUseCase(get(), get()) }
     factory { SignInUseCase(get(), get()) }
     factory { SignUpUseCase(get(), get()) }
@@ -67,7 +73,6 @@ val baseUrlModule:Module = module {
 val repositoryModule = module {
     single<IUserRepository> { UserRepositoryImpl(get(), get()) }
     single<ILoginRepo> { LoginRepoImpl(get(), get()) }
-//    single<ILoginRepo> { LoginRepoImpl(getKoin(){named("BaseUrl")}, get()) }
     single<IProfileRepo> { ProfileRepoImpl(get(), get()) }
 }
 

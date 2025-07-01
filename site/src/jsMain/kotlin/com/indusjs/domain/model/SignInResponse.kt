@@ -1,3 +1,12 @@
 package com.indusjs.domain.model
 
-data class SignInResponse(val success: Boolean, val message: String)
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class SignInResponse(val email: String = "",
+                          val id: Int = -1,
+                          val name: String = "",
+                          val token: String = "",
+    val success: Boolean = true, val message:String = "")
+
+
