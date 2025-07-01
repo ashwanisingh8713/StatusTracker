@@ -3,9 +3,11 @@ package com.indusjs.di
 import com.indusjs.data.repo.ProfileRepoImpl
 import com.indusjs.data.repo.LoginRepoImpl
 import com.indusjs.domain.repo.IUserRepository
+import com.indusjs.domain.usecase.login.SignInUseCase
 import com.indusjs.repository.ILoginRepo
 import com.indusjs.repository.IProfileRepo
 import com.indusjs.repository.UserRepositoryImpl
+import com.indusjs.statustracker.viewmodel.SignInViewModule
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.DEFAULT
@@ -13,6 +15,7 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.HttpHeaders
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
@@ -30,7 +33,7 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
             useCasesModule,
             repositoryModule,
             ktorModule,
-//            baseUrlModule,
+            baseUrlModule,
             dispatcherModule,
             coroutineScopeModule
             //platformModule()
@@ -40,13 +43,14 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
 
 
 val viewModelModule: Module = module {
-    /*factory { SignInViewModel(get(), get()) }
-    factory { SignUpViewModel(get()) }
+    factory { SignInViewModule(get(), get()) }
+    /*factory { SignUpViewModel(get()) }
     factory { EditProfileViewModel(get()) }
     factory { GetProfileViewModel(get()) }*/
 }
 
 val useCasesModule: Module = module {
+    factory{ SignInUseCase(get(), get()) }
     /*factory { ForgotPasswordUseCase(get(), get()) }
     factory { SignInUseCase(get(), get()) }
     factory { SignUpUseCase(get(), get()) }
@@ -79,13 +83,13 @@ val ktorModule = module {
     single {
         HttpClient {
             install(ContentNegotiation) {
-                /*json(
+                json(
                     Json {
                         ignoreUnknownKeys = true
                         prettyPrint = true
                         isLenient = true
                     }
-                )*/
+                )
             }
             install(Logging) {
                 logger = Logger.DEFAULT

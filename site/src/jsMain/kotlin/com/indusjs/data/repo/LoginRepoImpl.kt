@@ -19,7 +19,7 @@ class LoginRepoImpl(private val endPoint: String,
                     private val httpClient: HttpClient): ILoginRepo {
 
     override suspend fun signIn(param: Any?): SignInResponse {
-        val bodyParam = param as? LoginRequestBody
+        val bodyParam = param as? SignInRequestBody
         val response: HttpResponse = httpClient.post() {
             url("$endPoint/auth/register")
             setBody(bodyParam)
@@ -47,10 +47,16 @@ class LoginRepoImpl(private val endPoint: String,
 }
 
 @Serializable
-data class LoginRequestBody(
+data class SignInRequestBody(
     val email: String,
     val password: String,
-    val userType:String = UserType.None().type,
+)
+
+@Serializable
+data class SignUpRequestBody(
+    val email: String,
+    val password: String,
+    val name:String
 )
 
 @Serializable
