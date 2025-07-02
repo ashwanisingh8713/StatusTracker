@@ -40,12 +40,10 @@ import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 
 @Composable
 fun LoginSection(onForgotPasswordClick: () -> Unit, onSignInClick:(email: String, password: String) -> Unit = { _, _ -> }) {
-//fun LoginSection(onForgotPasswordClick: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var emailError by remember { mutableStateOf("") }
     var passwordError by remember { mutableStateOf("") }
-
 
     val currentBreakpoint = rememberBreakpoint() // NEW: Get the current breakpoint here
 
@@ -62,24 +60,22 @@ fun LoginSection(onForgotPasswordClick: () -> Unit, onSignInClick:(email: String
     ) {
         // SoftQA Logo
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Img(src = "/softqa-logo.svg", alt = "SoftQA Logo", attrs = {
+            Img(src = "/favicon.ico", alt = "SoftQA Logo", attrs = {
                 style {
                     width(40.px)
                     height(40.px)
                     marginRight(10.px)
                 }
             })
-            SpanText("SoftQA", modifier = Modifier.fontSize(24.px).fontWeight(FontWeight.Bold).color(
+            SpanText("BIT", modifier = Modifier.fontSize(24.px).fontWeight(FontWeight.Bold).color(
                 Colors.Black))
         }
-
         SpanText(
-            "Welcome Back!",
+            "Welcome To! Bharat Info Technologies",
             modifier = Modifier.fontSize(32.px).fontWeight(FontWeight.Bold).color(Colors.Black).margin(top = 40.px, bottom = 10.px)
         )
-        P(attrs = { style { fontSize(16.px); color(Colors.Gray); textAlign(TextAlign.Center) }}) {
-            Text("Sign in to access your dashboard and continue")
-            Text("optimizing your QA process.")
+        P(attrs = { style { fontSize(20.px); color(Colors.Gray); textAlign(TextAlign.Center) }}) {
+            Text("Sign in to access and enter your daily work log.")
         }
 
         Spacer(Modifier.height(40.px))
@@ -204,6 +200,10 @@ fun LoginSection(onForgotPasswordClick: () -> Unit, onSignInClick:(email: String
                 style {
                     color(Color("#007BFF"))
                     marginLeft(5.px)
+                }
+                onClick {
+                    it.preventDefault() // Prevents the browser from navigating away
+                    onForgotPasswordClick() // Call the lambda to show the dialog
                 }
             }) {
                 Text("Sign Up")

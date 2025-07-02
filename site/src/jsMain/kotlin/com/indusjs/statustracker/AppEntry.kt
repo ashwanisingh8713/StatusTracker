@@ -38,9 +38,8 @@ fun initStyles(ctx: InitSilkContext) {
 @App
 @Composable
 fun AppEntry(content: @Composable () -> Unit) {
-    LaunchedEffect(Unit) {
-        //initKoin()
-    }
+    // Initialise DI
+    initKoin()
     SilkApp {
         val colorMode = ColorMode.current
         LaunchedEffect(colorMode) {

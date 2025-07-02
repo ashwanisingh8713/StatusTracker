@@ -16,6 +16,13 @@ kobweb {
         index {
             description.set("Powered by Kobweb")
         }
+        server {
+            remoteDebugging {
+                enabled.set(true)
+                port.set(5005) // You can choose a different port if 5005 is in use
+            }
+        }
+
     }
 }
 
