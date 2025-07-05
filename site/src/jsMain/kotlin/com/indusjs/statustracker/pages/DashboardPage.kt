@@ -3,7 +3,7 @@ package com.indusjs.statustracker.pages
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import com.indusjs.data.model.LearningEntry
+import com.indusjs.data.mapper.LearningEntry
 import com.indusjs.statustracker.AppStyles
 import com.indusjs.statustracker.utils.Redirection
 import com.varabyte.kobweb.core.Page
@@ -18,14 +18,10 @@ import com.varabyte.kobweb.core.PageContext
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
-import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.div
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.times
-import org.w3c.dom.Window
 
 
 @Page(Redirection.DASHBOARD)

@@ -2,14 +2,20 @@ package com.indusjs.di
 
 import com.indusjs.data.repo.ProfileRepoImpl
 import com.indusjs.data.repo.LoginRepoImpl
+import com.indusjs.data.repo.WorkLogRepoImpl
 import com.indusjs.domain.repo.IUserRepository
 import com.indusjs.domain.usecase.login.SignInUseCase
 import com.indusjs.domain.usecase.login.SignUpUseCase
+import com.indusjs.domain.usecase.worklog.WorkLogEntryUseCase
+import com.indusjs.domain.usecase.worklog.WorkLogListUseCase
 import com.indusjs.repository.ILoginRepo
 import com.indusjs.repository.IProfileRepo
+import com.indusjs.repository.IWorkLogRepo
 import com.indusjs.repository.UserRepositoryImpl
 import com.indusjs.statustracker.viewmodel.SignInViewModule
 import com.indusjs.statustracker.viewmodel.SignUpViewModel
+import com.indusjs.statustracker.viewmodel.WorkLogEntryViewModel
+import com.indusjs.statustracker.viewmodel.WorkLogListViewModel
 //import com.indusjs.statustracker.viewmodel.SignUpViewModule
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -39,7 +45,6 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
             baseUrlModule,
             dispatcherModule,
             coroutineScopeModule
-            //platformModule()
         )
     }
 
@@ -48,20 +53,15 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
 val viewModelModule: Module = module {
     factory { SignInViewModule(get(), get()) }
     factory { SignUpViewModel(get(), get()) }
-    //factory { com.indusjs.statustracker.viewmodel.SignUpViewModule(get(), get()) }
-    /*factory { SignUpViewModel(get()) }
-    factory { EditProfileViewModel(get()) }
-    factory { GetProfileViewModel(get()) }*/
+    factory { WorkLogEntryViewModel(get(), get()) }
+    factory { WorkLogListViewModel(get(), get()) }
 }
 
 val useCasesModule: Module = module {
     factory{ SignInUseCase(get(), get()) }
     factory { SignUpUseCase(get(), get()) }
-    /*factory { ForgotPasswordUseCase(get(), get()) }
-    factory { SignInUseCase(get(), get()) }
-    factory { SignUpUseCase(get(), get()) }
-    factory { EditProfileUseCase(get(), get()) }
-    factory { GetProfileUseCase(get(), get()) }*/
+    factory { WorkLogEntryUseCase(get(), get()) }
+    factory { WorkLogListUseCase(get(), get()) }
 }
 
 val baseUrlModule:Module = module {
@@ -74,6 +74,7 @@ val repositoryModule = module {
     single<IUserRepository> { UserRepositoryImpl(get(), get()) }
     single<ILoginRepo> { LoginRepoImpl(get(), get()) }
     single<IProfileRepo> { ProfileRepoImpl(get(), get()) }
+    single<IWorkLogRepo> { WorkLogRepoImpl(get(), get()) }
 }
 
 val dispatcherModule = module {
