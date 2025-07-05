@@ -20,8 +20,6 @@ import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.css.borderBottom
 import com.varabyte.kobweb.compose.css.borderColor
-import com.varabyte.kobweb.compose.css.functions.colorMix
-import com.varabyte.kobweb.compose.css.functions.opacity
 import com.varabyte.kobweb.compose.css.gridTemplateRows
 import com.varabyte.kobweb.compose.css.margin
 import com.varabyte.kobweb.compose.css.scale
@@ -37,6 +35,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
+import com.varabyte.kobweb.core.PageContext
 import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.forms.Input
 import com.varabyte.kobweb.silk.components.text.SpanText
@@ -45,12 +44,8 @@ import com.varabyte.kobweb.silk.style.common.PlaceholderColor
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.ExperimentalComposeWebApi
 import org.jetbrains.compose.web.attributes.InputType
-import org.jetbrains.compose.web.attributes.cols
 import org.jetbrains.compose.web.attributes.disabled
-import org.jetbrains.compose.web.attributes.list
-import org.jetbrains.compose.web.attributes.placeholder // For TextArea placeholder & Input
 import org.jetbrains.compose.web.attributes.selected
-import org.jetbrains.compose.web.attributes.size
 import org.jetbrains.compose.web.css.AlignItems
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.Color
@@ -107,8 +102,6 @@ import org.jetbrains.compose.web.css.textDecoration
 import org.jetbrains.compose.web.css.transitions
 import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.*
-import org.w3c.dom.HTMLSelectElement
-import org.w3c.dom.HTMLTextAreaElement
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -126,7 +119,7 @@ data class WorkLogEntry(
 )
 
 // Constants for categories and statuses
-val CATEGORIES = listOf(
+val SUBJECTS = listOf(
     "Kotlin Fundamental", "GoLang Fundamental", "GoLang Data Structure",
     "Kotlin Data Structure", "Kobweb Fundamental", "Kobweb UI",
     "English Grammer", "Vocabulary"
@@ -191,7 +184,7 @@ fun DropdownInput(
 fun ResponsiveFormRow(
     label: String,
     colorLabelText: CSSColorValue,
-    labelWidth: Int = 90, // Default width for labels on desktop
+    labelWidth: Int = 120, // Default width for labels on desktop
     content: @Composable (modifier: Modifier, isMobile: Boolean) -> Unit
 ) {
     val currentBreakpoint = rememberBreakpoint()
@@ -247,7 +240,7 @@ private val COLOR_INPUT_BORDER = Color("#2D2D5A")
 @OptIn(ExperimentalTime::class)
 @Page(Redirection.DAILY_WORK_LOG)
 @Composable
-fun DailyWorkLogPage() {
+fun DailyWorkLogPage(ctx: PageContext) {
 
     Style(ArticleHeaderStyle)
     Style(FooterStyle)
@@ -257,7 +250,7 @@ fun DailyWorkLogPage() {
     var currentTask by remember { mutableStateOf("") }
     var currentStartTime by remember { mutableStateOf("") }
     var currentEndTime by remember { mutableStateOf("") }
-    var currentCategory by remember { mutableStateOf("") } // Start with empty for placeholder
+    var currentSubject by remember { mutableStateOf("") } // Start with empty for placeholder
     var currentStatus by remember { mutableStateOf("") }   // Start with empty for placeholder
     var currentNotes by remember { mutableStateOf("") }
     var topDate by remember { mutableStateOf("") }
@@ -343,20 +336,38 @@ fun DailyWorkLogPage() {
                     .background(COLOR_CONTAINER_BACKGROUND)
                     .boxShadow(0.px, 2.px, 10.px, 0.px, COLOR_INNER_CONTAINER_SHADOW)
             ) {
-                ResponsiveFormRow(label = "Category:", colorLabelText = COLOR_LABEL_TEXT) { mod, _ ->
+                ResponsiveFormRow(label = "Subject:", colorLabelText = COLOR_LABEL_TEXT) { mod, _ ->
                     DropdownInput(
-                        selectedItem = currentCategory,
-                        items = CATEGORIES,
-                        onValueChange = { currentCategory = it },
+                        selectedItem = currentSubject,
+                        items = SUBJECTS,
+                        onValueChange = { currentSubject = it },
                         modifier = mod
                             .padding(8.px)
                             .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
                             .backgroundColor(COLOR_INPUT_BACKGROUND)
                             .color(COLOR_INPUT_TEXT),
-                        placeholder = "Select category"
+                        placeholder = "Select Subject"
                     )
                 }
-                ResponsiveFormRow(label = "Task:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
+
+                ResponsiveFormRow(label = "Chapter/Section:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
+                    Input(
+                        type = InputType.Text,
+                        value = currentTask,
+                        onValueChange = { currentTask = it },
+                        placeholder = "Chapter/Section of work or learning",
+                        placeholderColor = PlaceholderColor(COLOR_INPUT_TEXT, opacity = 0.4),
+                        modifier = mod
+                            .padding(8.px)
+                            .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
+                            .borderRadius(8.px)
+                            .fontSize(if (mobile) 14.px else 16.px)
+                            .backgroundColor(COLOR_INPUT_BACKGROUND)
+                            .color(COLOR_INPUT_TEXT)
+                    )
+                }
+
+                ResponsiveFormRow(label = "Task/Topic:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
                     Input(
                         type = InputType.Text,
                         value = currentTask,
@@ -439,6 +450,21 @@ fun DailyWorkLogPage() {
                     }
                 }
 
+                ResponsiveFormRow(label = "Duration:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
+                    Input(
+                        type = InputType.Text,
+                        value = currentStartTime,
+                        onValueChange = { currentStartTime = it },
+                        modifier = mod
+                            .padding(8.px)
+                            .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
+                            .borderRadius(8.px)
+                            .fontSize(if (mobile) 14.px else 16.px)
+                            .backgroundColor(COLOR_INPUT_BACKGROUND)
+                            .color(COLOR_INPUT_TEXT)
+                    )
+                }
+
                 ResponsiveFormRow(label = "Status:", colorLabelText = COLOR_LABEL_TEXT) { mod, _ ->
                     DropdownInput(
                         selectedItem = currentStatus,
@@ -463,7 +489,6 @@ fun DailyWorkLogPage() {
                         .backgroundColor(COLOR_INPUT_BACKGROUND)
                         .color(COLOR_INPUT_TEXT)
 
-
                     TextArea( // Corrected: Use toAttrs with finalHandler for TextArea
                         value = currentNotes,
 
@@ -484,7 +509,7 @@ fun DailyWorkLogPage() {
                                 task = currentTask,
                                 startTime = currentStartTime,
                                 endTime = currentEndTime,
-                                category = currentCategory.ifEmpty { "N/A" }, // Handle empty selection
+                                category = currentSubject.ifEmpty { "N/A" }, // Handle empty selection
                                 status = currentStatus.ifEmpty { "N/A" },   // Handle empty selection
                                 notes = currentNotes
                             )
@@ -492,7 +517,7 @@ fun DailyWorkLogPage() {
                             currentTask = ""
                             currentStartTime = ""
                             currentEndTime = ""
-                            currentCategory = "" // Reset for placeholder
+                            currentSubject = "" // Reset for placeholder
                             currentStatus = ""   // Reset for placeholder
                             currentNotes = ""
                         } else {
