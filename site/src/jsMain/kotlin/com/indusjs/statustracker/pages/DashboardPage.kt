@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import com.indusjs.data.model.LearningEntry
+import com.indusjs.statustracker.AppStyles
 import com.indusjs.statustracker.utils.Redirection
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -206,27 +207,3 @@ fun LearningEntryRowDesktop(entry: LearningEntry, modifier: Modifier = Modifier)
 }
 
 
-object AppStyles {
-    // Colors
-    val PrimaryColor = Color("#8EB0E1") // Green
-    val SecondaryColor = Color("#8EB0E1") // Blue
-    val BackgroundColor = Color("#8EB0E1") // Light Grey
-    private val COLOR_INPUT_BACKGROUND = Color("#8EB0E1")
-    val TextColor = Color("#8EB0E1")// Dark Grey
-    val BorderColor = Color("#8EB0E1")// Lighter Grey
-    val SuccessColor = Color("#8EB0E1")
-    val PendingColor = Color("#8EB0E1")
-    val CompletedColor = Color("#8EB0E1")
-
-    // Font Sizes
-    val FontSizeLarge = 1.5.em
-    val FontSizeMedium = 1.2.em
-    val FontSizeNormal = 1.0.em
-    val FontSizeSmall = 0.8.em
-
-    // Spacing/Sizes
-    val PaddingDefault = 16.px
-    val MarginDefault = 8.px
-    val BorderRadiusDefault = 8.px
-    val RowHeight = 80.px // Example fixed height for rows
-}

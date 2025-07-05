@@ -19,6 +19,39 @@ import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import com.varabyte.kobweb.silk.theme.modifyStyleBase
 import org.jetbrains.compose.web.css.*
 
+object AppStyles {
+    // Colors
+    val PrimaryColor = Color("#8EB0E1") // Green
+    val SecondaryColor = Color("#8EB0E1") // Blue
+    val BackgroundColor = Color("#8EB0E1") // Light Grey
+
+    val TextColor = Color("#8EB0E1")// Dark Grey
+    val BorderColor = Color("#8EB0E1")// Lighter Grey
+    val SuccessColor = Color("#8EB0E1")
+    val PendingColor = Color("#8EB0E1")
+    val CompletedColor = Color("#8EB0E1")
+
+    val COLOR_LABEL_TEXT = Color("#333333")
+    val COLOR_INPUT_TEXT = Color("#333333")
+    val COLOR_INPUT_BACKGROUND = Color("#8EB0E1")
+    val COLOR_CONTAINER_BACKGROUND = Color("#8EB0E1")
+    val COLOR_CONTAINER_SHADOW = Color("#C4787C")
+    val COLOR_INNER_CONTAINER_SHADOW = Color("#FFC44F")
+    val COLOR_INPUT_BORDER = Color("#2D2D5A")
+
+    // Font Sizes
+    val FontSizeLarge = 1.5.em
+    val FontSizeMedium = 1.2.em
+    val FontSizeNormal = 1.0.em
+    val FontSizeSmall = 0.8.em
+
+    // Spacing/Sizes
+    val PaddingDefault = 16.px
+    val MarginDefault = 8.px
+    val BorderRadiusDefault = 8.px
+    val RowHeight = 80.px // Example fixed height for rows
+}
+
 @InitSilk
 fun initSiteStyles(ctx: InitSilkContext) {
     // This site does not need scrolling itself, but this is a good demonstration for how you might enable this in your

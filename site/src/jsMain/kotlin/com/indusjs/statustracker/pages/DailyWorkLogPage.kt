@@ -4,6 +4,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.indusjs.statustracker.AppStyle
+import com.indusjs.statustracker.AppStyles.COLOR_CONTAINER_BACKGROUND
+import com.indusjs.statustracker.AppStyles.COLOR_CONTAINER_SHADOW
+import com.indusjs.statustracker.AppStyles.COLOR_INNER_CONTAINER_SHADOW
+import com.indusjs.statustracker.AppStyles.COLOR_INPUT_BACKGROUND
+import com.indusjs.statustracker.AppStyles.COLOR_INPUT_BORDER
+import com.indusjs.statustracker.AppStyles.COLOR_INPUT_TEXT
+import com.indusjs.statustracker.AppStyles.COLOR_LABEL_TEXT
 import com.indusjs.statustracker.utils.Redirection
 import com.indusjs.statustracker.utils.Resize
 import com.indusjs.statustracker.utils.borderTop
@@ -228,14 +235,6 @@ object ArticleHeaderStyle : StyleSheet() {
     }
 }
 
-private val COLOR_LABEL_TEXT = Color("#333333")
-private val COLOR_INPUT_TEXT = Color("#333333")
-private val COLOR_CONTAINER_BACKGROUND = Color("#8EB0E1")
-private val COLOR_CONTAINER_SHADOW = Color("#C4787C")
-private val COLOR_INNER_CONTAINER_SHADOW = Color("#FFC44F")
-private val COLOR_INPUT_BACKGROUND = Color("#8EB0E1")
-private val COLOR_INPUT_BORDER = Color("#2D2D5A")
-
 
 @OptIn(ExperimentalTime::class)
 @Page(Redirection.DAILY_WORK_LOG)
@@ -306,7 +305,7 @@ fun DailyWorkLogPage(ctx: PageContext) {
                         value = topDate,
                         onValueChange = { topDate = it },
                         modifier = Modifier
-                            .width(if (isMobile) 100.px else 150.px)
+                            .width(if (isMobile) 150.px else 150.px)
                             .padding(8.px)
                             .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
                             .borderRadius(8.px)

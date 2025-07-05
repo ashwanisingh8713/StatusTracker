@@ -11,6 +11,7 @@ import com.indusjs.di.initKoin
 import com.indusjs.statustracker.components.ForgotPasswordDialog
 import com.indusjs.statustracker.components.LoginSection
 import com.indusjs.statustracker.components.MarketingSection
+import com.indusjs.statustracker.components.MessageAlertDialog
 import com.indusjs.statustracker.components.layouts.PageLayoutData
 import com.indusjs.statustracker.model.ResourceUiState
 import com.indusjs.statustracker.viewmodel.SignInViewModule
@@ -48,6 +49,8 @@ fun initLoginPage(ctx: InitRouteContext) {
 fun LoginPage(ctx: PageContext) {
     val breakpoint = rememberBreakpoint()
     var showForgotPasswordDialog by remember { mutableStateOf(false) }
+    var showAlertDialog by remember { mutableStateOf(false) }
+    var alertMessage by remember { mutableStateOf("") }
 
 
     KobwebColumn(
@@ -87,4 +90,23 @@ fun LoginPage(ctx: PageContext) {
             println("Forgot password request initiated for: $emailToReset")
         }
     )
+
+    // Display the alert dialog if showAlertDialog is true
+    if (showAlertDialog) {
+        MessageAlertDialog(
+            message = alertMessage,
+            onOk = {
+                println("User clicked Ok")
+                showAlertDialog = false
+                // Add your "Ok" action here
+            },
+            onCancel = {
+                println("User clicked Cancel")
+                showAlertDialog = false
+                // Add your "Cancel" action here
+            }
+        )
+    }
+
+
 }
