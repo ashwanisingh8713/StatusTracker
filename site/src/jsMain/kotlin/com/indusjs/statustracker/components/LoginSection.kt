@@ -2,20 +2,27 @@
 package com.indusjs.statustracker.components
 
 import androidx.compose.runtime.*
+import com.indusjs.statustracker.model.ResourceUiState
 import com.indusjs.statustracker.utils.Spacer
+import com.indusjs.statustracker.utils.ValidationUtil.Companion.validateEmail
+import com.indusjs.statustracker.utils.ValidationUtil.Companion.validatePassword
+import com.indusjs.statustracker.viewmodel.SignInViewModule
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.css.textAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.core.PageContext
 import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.forms.Input
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.style.animation.Keyframes
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
@@ -36,10 +43,67 @@ import org.jetbrains.compose.web.dom.Text
 // CORRECTED IMPORTS:
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.web.css.deg
+import org.jetbrains.compose.web.dom.Progress
+import org.koin.compose.getKoin
+// IMPORTANT IMPORTS FOR STATE DELEGATION
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.Composable
+import com.indusjs.statustracker.utils.Redirection
+import com.varabyte.kobweb.compose.css.AnimationIterationCount
+import com.varabyte.kobweb.silk.style.animation.toAnimation
+import org.jetbrains.compose.web.css.AnimationTimingFunction
+import org.jetbrains.compose.web.css.s
+import org.jetbrains.compose.web.dom.Div
+import org.jetbrains.compose.web.dom.Span
 
 
 @Composable
-fun LoginSection(onForgotPasswordClick: () -> Unit, onSignInClick:(email: String, password: String) -> Unit = { _, _ -> }) {
+fun LoginSection(ctx: PageContext, onForgotPasswordClick: () -> Unit) {
+
+    // Getting SignInViewModel
+    val signInViewModel: SignInViewModule = getKoin().get<SignInViewModule>()
+
+    var showLoader by remember { mutableStateOf(false) }
+    var errorMessage:String? by remember { mutableStateOf(null) }
+
+    signInViewModel.getCoroutineScope.launch {
+        signInViewModel.loginState.collectLatest {
+            when(it.signInResponse) {
+                is ResourceUiState.Success -> {
+                    showLoader = false
+                    ctx.router.navigateTo(Redirection.DAILY_WORK_LOG) // Navigate to a protected page
+                    println("Login Success")
+                }
+                is ResourceUiState.Error -> {
+                    showLoader = false
+                    errorMessage =  it.signInResponse.message!!
+                    println("Login Error")
+                }
+                is ResourceUiState.Idle -> {
+                    println("Login Idle")
+                }
+                is ResourceUiState.Empty -> {
+                    println("Login Empty")
+                }
+                is ResourceUiState.Loading -> {
+                    showLoader = true
+                    errorMessage = null
+                    println("Login Loading")
+                }
+            }
+        }
+    }
+
+    val onSignInClick: (email: String, password: String) -> Unit = { email, password ->
+        signInViewModel.signInRequest(email, password)
+    }
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var emailError by remember { mutableStateOf("") }
@@ -131,22 +195,25 @@ fun LoginSection(onForgotPasswordClick: () -> Unit, onSignInClick:(email: String
             Text("Forgot Password?")
         }
 
-
         Spacer(Modifier.height(30.px))
 
-        Button(
-            onClick = {
-                emailError = validateEmail(email)
-                passwordError = validatePassword(password)
 
-                if (emailError.isEmpty() && passwordError.isEmpty()) {
-                    println("Login successful!")
-                    onSignInClick(email, password)
+            Button(
+                onClick = {
+                    emailError = validateEmail(email)
+                    passwordError = validatePassword(password)
+
+                    if (emailError.isEmpty() && passwordError.isEmpty()) {
+                        println("onSignInClick()")
+                        onSignInClick(email, password)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().backgroundColor(Color("#007BFF"))
+                    .color(Colors.White).borderRadius(8.px).padding(12.px)
+            ) {
+                Box() {
+                SpanText("Sign in", modifier = Modifier.fontSize(18.px))
                 }
-            },
-            modifier = Modifier.fillMaxWidth().backgroundColor(Color("#007BFF")).color(Colors.White).borderRadius(8.px).padding(12.px)
-        ) {
-            SpanText("Sign in", modifier = Modifier.fontSize(18.px))
         }
 
         Spacer(Modifier.height(20.px))
@@ -210,58 +277,4 @@ fun LoginSection(onForgotPasswordClick: () -> Unit, onSignInClick:(email: String
             }
         }
     }
-
-
-}
-
-// Validation Functions (basic implementation without regex)
-private fun validateEmail(email: String): String {
-    if (email.isEmpty()) {
-        return "Email cannot be empty."
-    }
-    val atIndex = email.indexOf('@')
-    val dotIndex = email.lastIndexOf('.')
-
-    if (atIndex == -1 || dotIndex == -1 || atIndex > dotIndex || atIndex == 0 || dotIndex == email.length - 1) {
-        return "Invalid email format."
-    }
-    if (email.contains(" ")) {
-        return "Email cannot contain spaces."
-    }
-    return ""
-}
-
-private fun validatePassword(password: String): String {
-    if (password.isEmpty()) {
-        return "Password cannot be empty."
-    }
-    if (password.length < 5) {
-        return "Password must be at least 8 characters long."
-    }
-
-    var hasUppercase = true
-    var hasLowercase = true
-    var hasDigit = true
-    var hasSpecialChar = true
-
-    /*var hasUppercase = false
-    var hasLowercase = false
-    var hasDigit = false
-    var hasSpecialChar = false
-
-    for (char in password) {
-        when {
-            char.isUpperCase() -> hasUppercase = true
-            char.isLowerCase() -> hasLowercase = true
-            char.isDigit() -> hasDigit = true
-            !char.isLetterOrDigit() && !char.isWhitespace() -> hasSpecialChar = true
-        }
-    }*/
-
-    if (!hasUppercase) return "Password must contain at least one uppercase letter."
-    if (!hasLowercase) return "Password must contain at least one lowercase letter."
-    if (!hasDigit) return "Password must contain at least one digit."
-    if (!hasSpecialChar) return "Password must contain at least one special character."
-
-    return ""
 }

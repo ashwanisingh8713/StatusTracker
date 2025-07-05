@@ -1,6 +1,8 @@
    import com.varabyte.kobweb.gradle.application.util.configAsKobwebApplication
+   import kotlinx.html.link
+   import java.lang.module.ModuleFinder.compose
 
-plugins {
+   plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kobweb.application)
@@ -15,6 +17,12 @@ kobweb {
     app {
         index {
             description.set("Powered by Kobweb")
+
+            head.apply {
+                add {
+                    link(href = "/styles.css", rel = "stylesheet")
+                }
+            }
         }
         server {
             remoteDebugging {
@@ -37,6 +45,12 @@ kotlin {
 //        }
 
         jsMain.dependencies {
+//            implementation(libs.compose.material3)
+            // Add the Material3 dependency here:
+//            implementation("org.jetbrains.compose.material3:material3:1.6.1")
+//            implementation("org.jetbrains.kotlin-wrappers:kotlin-mui-material-js")
+//            implementation(kotlinWrappers.emotion)
+            implementation("com.varabyte.kobweb:compose-html-ext:...")
             implementation(libs.compose.runtime)
             implementation(libs.compose.html.core)
             implementation(libs.kobweb.core)

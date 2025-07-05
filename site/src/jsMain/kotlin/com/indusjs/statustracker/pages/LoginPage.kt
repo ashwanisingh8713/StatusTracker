@@ -49,34 +49,6 @@ fun LoginPage(ctx: PageContext) {
     val breakpoint = rememberBreakpoint()
     var showForgotPasswordDialog by remember { mutableStateOf(false) }
 
-    // Getting SignInViewModel
-    val signInViewModel: SignInViewModule = getKoin().get<SignInViewModule>()
-
-    signInViewModel.getCoroutineScope.launch {
-        signInViewModel.loginState.collectLatest {
-            when(it.signInResponse) {
-                is ResourceUiState.Success -> {
-                    println("Login Success")
-                }
-                is ResourceUiState.Error -> {
-                    println("Login Error")
-                }
-                is ResourceUiState.Idle -> {
-                    println("Login Idle")
-                }
-                is ResourceUiState.Empty -> {
-                    println("Login Empty")
-                }
-                is ResourceUiState.Loading -> {
-                    println("Login Loading")
-                }
-            }
-        }
-    }
-
-    val onSignInClick: (email: String, password: String) -> Unit = { email, password ->
-        signInViewModel.signInRequest(email, password)
-    }
 
     KobwebColumn(
         modifier = Modifier.fillMaxSize()
@@ -87,7 +59,7 @@ fun LoginPage(ctx: PageContext) {
                     modifier = Modifier.weight(0.4f).fillMaxHeight(),
                     contentAlignment = Alignment.Center
                 ) {
-                    LoginSection(onForgotPasswordClick = { showForgotPasswordDialog = true }, onSignInClick = onSignInClick)
+                    LoginSection(ctx = ctx, onForgotPasswordClick = { showForgotPasswordDialog = true })
                 }
                 Box(
                     modifier = Modifier.weight(0.6f).fillMaxHeight()
@@ -101,7 +73,7 @@ fun LoginPage(ctx: PageContext) {
                 modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                 contentAlignment = Alignment.Center
             ) {
-                LoginSection(onForgotPasswordClick = { showForgotPasswordDialog = true }, onSignInClick = onSignInClick)
+                LoginSection(ctx = ctx, onForgotPasswordClick = { showForgotPasswordDialog = true })
             }
         }
     }

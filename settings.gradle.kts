@@ -9,6 +9,12 @@ dependencyResolutionManagement {
         mavenCentral()
         google()
     }
+    versionCatalogs {
+        create("kotlinWrappers") {
+            val wrappersVersion = "2025.7.1"
+            from("org.jetbrains.kotlin-wrappers:kotlin-wrappers-catalog:$wrappersVersion")
+        }
+    }
 }
 
 // The following block registers dependencies to enable Kobweb snapshot support. It is safe to delete or comment out
