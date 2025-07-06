@@ -2,9 +2,6 @@ package com.indusjs.statustracker.utils
 
 class ValidationUtil {
     companion object {
-
-        var TOKEN:String = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE4MTA3NDYsInVzZXJfaWQiOjE5fQ.ctmm7-MkmoAk5lQ8Nk65C5esAFE__FVkBN73-PZ7c6w"
-
         // To validate email
         fun validateEmail(email: String): String {
             if (email.isEmpty()) {

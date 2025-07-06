@@ -3,6 +3,7 @@ package com.indusjs.statustracker.pages
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.indusjs.data.auth.AuthManager
 import com.indusjs.statustracker.AppStyles.COLOR_CONTAINER_BACKGROUND
 import com.indusjs.statustracker.AppStyles.COLOR_CONTAINER_SHADOW
 import com.indusjs.statustracker.AppStyles.COLOR_INNER_CONTAINER_SHADOW
@@ -69,12 +70,12 @@ data class WorkLogEntry(
     val status: String = "",
     val description: String = ""*/
     val subject: String = "Subject 01",
-    val date: String = "2023-09-27",
+    val date: String = "2025-07-05T10:00:00Z",
     val chapter: String = "Chapter 01",
     val task: String = "Task 01",
-    val startTime: String = "09:30 AM",
-    val endTime: String = "13:20:PM",
-    val duration: String = "03 Hours",
+    val startTime: String = "2025-07-05T10:00:00Z",
+    val endTime: String = "2025-07-05T10:00:00Z",
+    val duration: Int = 1,
     val status: String = "Done",
     val description: String = "This is description of task"
 ) {
@@ -106,6 +107,14 @@ val STATUSES = listOf("In progress", "Done", "Doubt", "ToDo")
 @Page(Redirection.DAILY_WORK_LOG)
 @Composable
 fun DailyWorkLogPage(ctx: PageContext) {
+
+    if(AuthManager.isSignedIn()) {
+        println("User is signed in")
+    } else {
+        ctx.router.navigateTo(Redirection.LOGIN) // Navigate to a protected page
+        println("User is not signed in")
+    }
+
 
     val workLogEntryViewModel = getKoin().get<WorkLogEntryViewModel>()
 
@@ -342,9 +351,9 @@ fun DailyWorkLogPage(ctx: PageContext) {
 
                 ResponsiveFormRow(label = "Duration:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
                     Input(
-                        type = InputType.Text,
+                        type = InputType.Number,
                         value = workLogEntryData.duration,
-                        onValueChange = { duration -> workLogEntryData = workLogEntryData.copy(duration = duration)  },
+                        onValueChange = { duration -> workLogEntryData = workLogEntryData.copy(duration = duration as Int)  },
                         modifier = mod
                             .padding(8.px)
                             .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)

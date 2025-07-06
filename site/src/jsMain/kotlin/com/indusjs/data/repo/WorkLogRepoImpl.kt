@@ -1,5 +1,6 @@
 package com.indusjs.data.repo
 
+import com.indusjs.data.auth.AuthManager
 import com.indusjs.domain.model.SignInResponse
 import com.indusjs.domain.model.WorkLogResponse
 import com.indusjs.repository.IWorkLogRepo
@@ -26,7 +27,7 @@ class WorkLogRepoImpl(private val endPoint: String, private val httpClient: Http
             setBody(bodyParam)
             contentType(ContentType.Application.Json)
             // Add the Authorization header with the Bearer token
-            header(HttpHeaders.Authorization, "Bearer ${ValidationUtil.TOKEN}")
+            header(HttpHeaders.Authorization, "Bearer ${AuthManager.getCurrentUserToken()}")
         }
         return if(response.status.isSuccess()) {
             response.body<WorkLogResponse>()

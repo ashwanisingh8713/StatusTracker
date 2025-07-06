@@ -64,7 +64,6 @@ fun LoginSection(ctx: PageContext, onForgotPasswordClick: () -> Unit, showToast:
             when(it.signInResponse) {
                 is ResourceUiState.Success -> {
                     showLoader = false
-                    ValidationUtil.TOKEN = it.signInResponse.data.token
                     ctx.router.navigateTo(Redirection.DAILY_WORK_LOG) // Navigate to a protected page
                     println("Login Success")
                 }

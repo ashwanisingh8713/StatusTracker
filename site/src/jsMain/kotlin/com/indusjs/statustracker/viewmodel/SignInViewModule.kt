@@ -1,6 +1,7 @@
 package com.indusjs.statustracker.viewmodel
 
 import com.indusjs.data.repo.SignInRequestBody
+import com.indusjs.data.auth.AuthManager
 import com.indusjs.domain.model.SignInResponse
 import com.indusjs.domain.usecase.login.SignInUseCase
 import com.indusjs.statustracker.model.ResourceUiState
@@ -28,6 +29,7 @@ class SignInViewModule(private val signInUseCase: SignInUseCase, private val cor
             signInUseCase(bodyParam)
                 .onSuccess<SignInResponse> {
                     println("signInRequest() onSuccess()")
+                    AuthManager.onSignInSuccess(it)
                     _loginState.value = _loginState.value.copy(signInResponse = ResourceUiState.Success(it))
                 }
                 .onFailure{

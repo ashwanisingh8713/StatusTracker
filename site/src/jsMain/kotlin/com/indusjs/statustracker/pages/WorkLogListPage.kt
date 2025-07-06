@@ -3,6 +3,7 @@ package com.indusjs.statustracker.pages
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import com.indusjs.data.auth.AuthManager
 import com.indusjs.data.mapper.LearningEntry
 import com.indusjs.statustracker.AppStyles
 import com.indusjs.statustracker.utils.Redirection
@@ -27,6 +28,13 @@ import org.jetbrains.compose.web.css.div
 @Page(Redirection.DASHBOARD)
 @Composable
 fun LearningListPage(ctx: PageContext) {
+    /*if(AuthManager.isSignedIn()) {
+        println("User is signed in")
+    } else {
+        ctx.router.navigateTo(Redirection.LOGIN) // Navigate to a protected page
+        println("User is not signed in")
+    }*/
+
     // Sample data (in a real app, this would come from a backend or state management)
     val learningEntries = remember {
         mutableStateListOf(
