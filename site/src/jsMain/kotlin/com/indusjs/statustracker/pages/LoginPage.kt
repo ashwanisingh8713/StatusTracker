@@ -12,6 +12,7 @@ import com.indusjs.statustracker.components.ForgotPasswordDialog
 import com.indusjs.statustracker.components.LoginSection
 import com.indusjs.statustracker.components.MarketingSection
 import com.indusjs.statustracker.components.MessageAlertDialog
+import com.indusjs.statustracker.components.Toast
 import com.indusjs.statustracker.components.layouts.PageLayoutData
 import com.indusjs.statustracker.model.ResourceUiState
 import com.indusjs.statustracker.viewmodel.SignInViewModule
@@ -51,6 +52,8 @@ fun LoginPage(ctx: PageContext) {
     var showForgotPasswordDialog by remember { mutableStateOf(false) }
     var showAlertDialog by remember { mutableStateOf(false) }
     var alertMessage by remember { mutableStateOf("") }
+    var showToast by remember { mutableStateOf(false) }
+    var toastMessage by remember { mutableStateOf("") }
 
 
     KobwebColumn(
@@ -62,7 +65,14 @@ fun LoginPage(ctx: PageContext) {
                     modifier = Modifier.weight(0.4f).fillMaxHeight(),
                     contentAlignment = Alignment.Center
                 ) {
-                    LoginSection(ctx = ctx, onForgotPasswordClick = { showForgotPasswordDialog = true })
+                    LoginSection(
+                        ctx = ctx,
+                        onForgotPasswordClick = {
+                            showForgotPasswordDialog = true
+                        }) { show, message ->
+                        showToast = show
+                        toastMessage = message
+                    }
                 }
                 Box(
                     modifier = Modifier.weight(0.6f).fillMaxHeight()
@@ -76,7 +86,12 @@ fun LoginPage(ctx: PageContext) {
                 modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                 contentAlignment = Alignment.Center
             ) {
-                LoginSection(ctx = ctx, onForgotPasswordClick = { showForgotPasswordDialog = true })
+                LoginSection(
+                    ctx = ctx,
+                    onForgotPasswordClick = { showForgotPasswordDialog = true }) { show, message ->
+                    showToast = show
+                    toastMessage = message
+                }
             }
         }
     }
@@ -108,5 +123,8 @@ fun LoginPage(ctx: PageContext) {
         )
     }
 
+    Toast(message = toastMessage, visible = showToast) {
+        showToast = false
+    }
 
 }

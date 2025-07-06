@@ -7,6 +7,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color.Companion.rgba
@@ -26,6 +27,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.textAlign
 import com.varabyte.kobweb.compose.ui.modifiers.top
+import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.text.SpanText
@@ -71,8 +73,8 @@ fun MessageAlertDialog(
                 message,
                 modifier = Modifier
                     .fontSize(AppStyles.FontSizeMedium)
-                    .color(AppStyles.TextColor)
-                    .textAlign(com.varabyte.kobweb.compose.css.TextAlign.Center)
+                    .color(AppStyles.COLOR_LABEL_TEXT)
+                    .textAlign(com.varabyte.kobweb.compose.css.TextAlign.Left)
             )
 
             Row(
@@ -93,6 +95,8 @@ fun MessageAlertDialog(
                 ) {
                     SpanText("Ok")
                 }
+
+                com.indusjs.statustracker.utils.Spacer(modifier = Modifier.width(50.px))
 
                 Button(
                     onClick = onCancel as (SyntheticMouseEvent) -> Unit,

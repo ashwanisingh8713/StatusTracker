@@ -1,7 +1,6 @@
 // src/jsMain/kotlin/com/indusjs/statustracker/components/LoginSection.kt
 package com.indusjs.statustracker.components
 
-import androidx.compose.runtime.*
 import com.indusjs.statustracker.model.ResourceUiState
 import com.indusjs.statustracker.utils.Spacer
 import com.indusjs.statustracker.utils.ValidationUtil.Companion.validateEmail
@@ -22,7 +21,6 @@ import com.varabyte.kobweb.core.PageContext
 import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.forms.Input
 import com.varabyte.kobweb.silk.components.text.SpanText
-import com.varabyte.kobweb.silk.style.animation.Keyframes
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
@@ -33,7 +31,6 @@ import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.marginLeft
 import org.jetbrains.compose.web.css.marginRight
 import org.jetbrains.compose.web.css.marginTop
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.A
@@ -45,8 +42,6 @@ import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.web.css.deg
-import org.jetbrains.compose.web.dom.Progress
 import org.koin.compose.getKoin
 // IMPORTANT IMPORTS FOR STATE DELEGATION
 import androidx.compose.runtime.getValue
@@ -55,34 +50,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.Composable
 import com.indusjs.statustracker.utils.Redirection
-import com.varabyte.kobweb.compose.css.AnimationIterationCount
-import com.varabyte.kobweb.silk.style.animation.toAnimation
-import org.jetbrains.compose.web.css.AnimationTimingFunction
-import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Span
+import com.indusjs.statustracker.utils.ValidationUtil
 
 
 @Composable
-fun LoginSection(ctx: PageContext, onForgotPasswordClick: () -> Unit) {
-
+fun LoginSection(ctx: PageContext, onForgotPasswordClick: () -> Unit, showToast: (Boolean, String) -> Unit) {
     // Getting SignInViewModel
     val signInViewModel: SignInViewModule = getKoin().get<SignInViewModule>()
-
     var showLoader by remember { mutableStateOf(false) }
-    var errorMessage:String? by remember { mutableStateOf(null) }
 
     signInViewModel.getCoroutineScope.launch {
         signInViewModel.loginState.collectLatest {
             when(it.signInResponse) {
                 is ResourceUiState.Success -> {
                     showLoader = false
+                    ValidationUtil.TOKEN = it.signInResponse.data.token
                     ctx.router.navigateTo(Redirection.DAILY_WORK_LOG) // Navigate to a protected page
                     println("Login Success")
                 }
                 is ResourceUiState.Error -> {
                     showLoader = false
-                    errorMessage =  it.signInResponse.message!!
+                    showToast(true, "Error! ${it.signInResponse.message}")
                     println("Login Error")
                 }
                 is ResourceUiState.Idle -> {
@@ -93,7 +81,6 @@ fun LoginSection(ctx: PageContext, onForgotPasswordClick: () -> Unit) {
                 }
                 is ResourceUiState.Loading -> {
                     showLoader = true
-                    errorMessage = null
                     println("Login Loading")
                 }
             }
@@ -196,8 +183,6 @@ fun LoginSection(ctx: PageContext, onForgotPasswordClick: () -> Unit) {
         }
 
         Spacer(Modifier.height(30.px))
-
-
             Button(
                 onClick = {
                     emailError = validateEmail(email)

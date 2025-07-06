@@ -33,6 +33,7 @@ object AppStyles {
 
     val COLOR_LABEL_TEXT = Color("#333333")
     val COLOR_INPUT_TEXT = Color("#333333")
+    val COLOR_OUTPUT_TEXT = Color("#ffffff")
     val COLOR_INPUT_BACKGROUND = Color("#8EB0E1")
     val COLOR_CONTAINER_BACKGROUND = Color("#8EB0E1")
     val COLOR_CONTAINER_SHADOW = Color("#C4787C")

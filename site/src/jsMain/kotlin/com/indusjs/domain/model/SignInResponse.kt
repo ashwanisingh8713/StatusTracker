@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 data class SignInResponse(val email: String = "",
                           val id: Int = -1,
                           val name: String = "",
-                          val token: String = "",
-    val success: Boolean = true, val message:String = "")
+                          val token: String = "")
 
 

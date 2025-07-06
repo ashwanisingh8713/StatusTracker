@@ -29,10 +29,6 @@ class LoginRepoImpl(private val endPoint: String,
             response.body<SignInResponse>()
         } else {
             throw IllegalArgumentException(response.status.toString())
-            /*SignInResponse(
-                success = false,
-                message = response.status.toString(),
-            )*/
         }
     }
 

@@ -4,6 +4,7 @@ import com.indusjs.data.repo.ProfileRepoImpl
 import com.indusjs.data.repo.LoginRepoImpl
 import com.indusjs.data.repo.WorkLogRepoImpl
 import com.indusjs.domain.repo.IUserRepository
+import com.indusjs.domain.repo.IWorkLogRepository
 import com.indusjs.domain.usecase.login.SignInUseCase
 import com.indusjs.domain.usecase.login.SignUpUseCase
 import com.indusjs.domain.usecase.worklog.WorkLogEntryUseCase
@@ -12,6 +13,7 @@ import com.indusjs.repository.ILoginRepo
 import com.indusjs.repository.IProfileRepo
 import com.indusjs.repository.IWorkLogRepo
 import com.indusjs.repository.UserRepositoryImpl
+import com.indusjs.repository.WorkLogRepositoryImpl
 import com.indusjs.statustracker.viewmodel.SignInViewModule
 import com.indusjs.statustracker.viewmodel.SignUpViewModel
 import com.indusjs.statustracker.viewmodel.WorkLogEntryViewModel
@@ -75,6 +77,7 @@ val repositoryModule = module {
     single<ILoginRepo> { LoginRepoImpl(get(), get()) }
     single<IProfileRepo> { ProfileRepoImpl(get(), get()) }
     single<IWorkLogRepo> { WorkLogRepoImpl(get(), get()) }
+    single<IWorkLogRepository> { WorkLogRepositoryImpl(get()) }
 }
 
 val dispatcherModule = module {

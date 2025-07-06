@@ -1,6 +1,6 @@
 package com.indusjs.statustracker.utils
 
-import com.indusjs.statustracker.pages.ArticleHeaderStyle.selector
+import com.indusjs.statustracker.AppStyle.selector
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.keywords.CSSAutoKeyword
 import org.jetbrains.compose.web.css.selectors.CSSSelector
