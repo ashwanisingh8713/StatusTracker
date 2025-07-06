@@ -18,6 +18,7 @@ object AuthManager {
         if(signInResponse == null) {
             signInResponse = UserStorage.loadUserInfoFromLocalStorage()
         }
+        println("Token is: ${signInResponse?.token}")
         return signInResponse?.token
     }
 

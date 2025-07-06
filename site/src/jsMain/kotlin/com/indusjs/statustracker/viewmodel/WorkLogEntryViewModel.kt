@@ -18,7 +18,7 @@ class WorkLogEntryViewModel(private val workLogUseCase: WorkLogEntryUseCase, pri
     val getCoroutineScope: CoroutineScope get() = coroutineScope
 
     fun sendWorkLogEntry(workLogEntry: WorkLogEntry) {
-        _status.value.copy(workLogEntryResponse = ResourceUiState.Loading)
+        _status.value = _status.value.copy(workLogEntryResponse = ResourceUiState.Loading)
         coroutineScope.launch {
             val params = WorkLogBodyParam(chapter = workLogEntry.chapter, duration = 1,
                 start_time = workLogEntry.startTime, end_time = workLogEntry.endTime, log_date = workLogEntry.date,

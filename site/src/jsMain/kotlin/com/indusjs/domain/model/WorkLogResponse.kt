@@ -16,5 +16,6 @@ data class WorkLogResponse(
     val subject: String,
     val subject_id: Int,
     val topic: String,
-    val user_id: Int
+    val user_id: Int,
+    val status: String? = null
 )

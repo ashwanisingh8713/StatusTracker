@@ -1,12 +1,15 @@
 package com.indusjs.statustracker.pages
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import com.indusjs.data.auth.AuthManager
-import com.indusjs.data.mapper.LearningEntry
+import com.indusjs.domain.model.WorkLogResponse
 import com.indusjs.statustracker.AppStyles
+import com.indusjs.statustracker.model.ResourceUiState
 import com.indusjs.statustracker.utils.Redirection
+import com.indusjs.statustracker.viewmodel.WorkLogListViewModel
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -19,59 +22,56 @@ import com.varabyte.kobweb.core.PageContext
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.div
+import org.koin.compose.getKoin
 
 
 @Page(Redirection.DASHBOARD)
 @Composable
-fun LearningListPage(ctx: PageContext) {
-    /*if(AuthManager.isSignedIn()) {
+fun WorkLogListPage(ctx: PageContext) {
+    if(AuthManager.isSignedIn()) {
         println("User is signed in")
     } else {
         ctx.router.navigateTo(Redirection.LOGIN) // Navigate to a protected page
         println("User is not signed in")
-    }*/
+    }
 
-    // Sample data (in a real app, this would come from a backend or state management)
-    val learningEntries = remember {
-        mutableStateListOf(
-            LearningEntry(
-                id = "1",
-                subject = "Mathematics",
-                chapter = "Algebra",
-                topic = "Linear Equations",
-                startTime = "10:10",
-                endTime = "12:10",
-                description = "Understanding the basics of solving linear equations with one variable.",
-                status = "In Progress",
-                duration = "2 Hrs"
-            ),
-            LearningEntry(
-                id = "2",
-                subject = "Science",
-                chapter = "Physics",
-                topic = "Newton's Laws",
-                startTime = "13:00",
-                endTime = "14:30",
-                description = "Detailed study of Newton's three laws of motion and their applications.",
-                status = "Pending",
-                duration = "3 Hrs"
-            ),
-            LearningEntry(
-                id = "3",
-                subject = "History",
-                chapter = "World War II",
-                topic = "Causes of WWII",
-                startTime = "15:15",
-                endTime = "18:30",
-                description = "Examining the political, economic, and social factors leading to World War II.",
-                status = "Completed",
-                duration = "3 Hrs 15 Mins"
-            )
-        )
+    val learningEntries = remember { mutableStateListOf<WorkLogResponse>() }
+
+    val workLogListViewModel = getKoin().get<WorkLogListViewModel>()
+
+    LaunchedEffect(Unit) {
+        workLogListViewModel.sendWorkLogListRequest()
+    }
+
+    workLogListViewModel.getCoroutineScope.launch {
+        workLogListViewModel.status.collectLatest {
+            when(it.workLogListResponse) {
+                is ResourceUiState.Success -> {
+                    val dd = it.workLogListResponse.data
+                    learningEntries.addAll(dd)
+                    //ctx.router.navigateTo(Redirection.DAILY_WORK_LOG) // Navigate to a protected page
+                    println("Login Success")
+                }
+                is ResourceUiState.Error -> {
+
+                }
+                is ResourceUiState.Idle -> {
+                    println("Login Idle")
+                }
+                is ResourceUiState.Empty -> {
+                    println("Login Empty")
+                }
+                is ResourceUiState.Loading -> {
+                    println("Login Loading")
+                }
+            }
+        }
     }
 
     Column(
@@ -106,7 +106,7 @@ fun LearningListPage(ctx: PageContext) {
 }
 
 @Composable
-fun LearningEntryRow(entry: LearningEntry, modifier: Modifier = Modifier) {
+fun LearningEntryRow(entry: WorkLogResponse, modifier: Modifier = Modifier) {
     val currentBreakpoint = rememberBreakpoint()
     val isMobile = currentBreakpoint <= Breakpoint.MD
 
@@ -120,7 +120,7 @@ fun LearningEntryRow(entry: LearningEntry, modifier: Modifier = Modifier) {
 
 // Mobile version of the LearningEntryRow
 @Composable
-fun LearningEntryRowMobile(entry: LearningEntry, modifier: Modifier = Modifier) {
+fun LearningEntryRowMobile(entry: WorkLogResponse, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -146,8 +146,8 @@ fun LearningEntryRowMobile(entry: LearningEntry, modifier: Modifier = Modifier) 
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                SpanText("Start: ${entry.startTime}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
-                SpanText("End: ${entry.endTime}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
+                SpanText("Start: ${entry.start_time}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
+                SpanText("End: ${entry.end_time}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
             }
             SpanText("Duration: ${entry.duration}", modifier = Modifier.fontSize(AppStyles.FontSizeNormal).color(AppStyles.SecondaryColor).fontWeight(com.varabyte.kobweb.compose.css.FontWeight.Bold))
         }
@@ -160,12 +160,12 @@ fun LearningEntryRowMobile(entry: LearningEntry, modifier: Modifier = Modifier) 
             else -> AppStyles.TextColor
         }
         SpanText("Status: ${entry.status}", modifier = Modifier.fontSize(AppStyles.FontSizeNormal).color(statusColor).fontWeight(com.varabyte.kobweb.compose.css.FontWeight.Bold).margin(top = AppStyles.MarginDefault / 2))
-        SpanText("Description: ${entry.description}",
+        SpanText("Description: ${entry.notes}",
             modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor).margin(top = AppStyles.MarginDefault / 4))
     }
 }
 @Composable
-fun LearningEntryRowDesktop(entry: LearningEntry, modifier: Modifier = Modifier) {
+fun LearningEntryRowDesktop(entry: WorkLogResponse, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -190,8 +190,8 @@ fun LearningEntryRowDesktop(entry: LearningEntry, modifier: Modifier = Modifier)
         Column(modifier = Modifier
             .flexGrow(1)
             .padding(right = AppStyles.MarginDefault)) {
-            SpanText("Start: ${entry.startTime}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
-            SpanText("End: ${entry.endTime}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
+            SpanText("Start: ${entry.start_time}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
+            SpanText("End: ${entry.end_time}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
             SpanText("Duration: ${entry.duration}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
         }
 
@@ -204,7 +204,7 @@ fun LearningEntryRowDesktop(entry: LearningEntry, modifier: Modifier = Modifier)
                 else -> AppStyles.TextColor
             }
             SpanText("Status: ${entry.status}", modifier = Modifier.fontSize(AppStyles.FontSizeNormal).color(statusColor))
-            SpanText("Description: ${entry.description.take(50)}...", // Truncate for brevity in list
+            SpanText("Description: ${entry.notes.take(50)}...", // Truncate for brevity in list
                 modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
         }
     }

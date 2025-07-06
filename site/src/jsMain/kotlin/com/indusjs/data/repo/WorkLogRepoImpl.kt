@@ -7,6 +7,7 @@ import com.indusjs.repository.IWorkLogRepo
 import com.indusjs.statustracker.utils.ValidationUtil
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -37,7 +38,17 @@ class WorkLogRepoImpl(private val endPoint: String, private val httpClient: Http
     }
 
     override suspend fun workLogList(params: Any): List<WorkLogResponse> {
-        TODO("Not yet implemented")
+        val response: HttpResponse = httpClient.get() {
+            url("$endPoint/work-session")
+            contentType(ContentType.Application.Json)
+            // Add the Authorization header with the Bearer token
+            header(HttpHeaders.Authorization, "Bearer ${AuthManager.getCurrentUserToken()}")
+        }
+        return if(response.status.isSuccess()) {
+            response.body<List<WorkLogResponse>>()
+        } else {
+            throw IllegalArgumentException(response.status.toString())
+        }
     }
 }
 
