@@ -61,7 +61,18 @@ fun LoginPage(ctx: PageContext) {
     KobwebColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        if (isMobile) {
+        Box(
+            modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+            contentAlignment = Alignment.Center
+        ) {
+            LoginSection(
+                ctx = ctx,
+                onForgotPasswordClick = { showForgotPasswordDialog = true }) { show, message ->
+                showToast = show
+                toastMessage = message
+            }
+        }
+        /*if (isMobile) {
             Box(
                 modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                 contentAlignment = Alignment.Center
@@ -96,7 +107,7 @@ fun LoginPage(ctx: PageContext) {
                     MarketingSection()
                 }
             }
-        }
+        }*/
     }
 
     ForgotPasswordDialog(
