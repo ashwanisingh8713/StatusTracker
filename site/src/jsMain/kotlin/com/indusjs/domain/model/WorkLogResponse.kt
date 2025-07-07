@@ -9,7 +9,7 @@ data class WorkLogResponse(
     val chapter: String,
     val duration: Int,
     val end_time: String,
-    val id: Int,
+    val id: Int = -1,
     val log_date: String,
     val notes: String,
     val start_time: String,

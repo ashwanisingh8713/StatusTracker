@@ -2,14 +2,19 @@ package com.indusjs.statustracker.pages
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.indusjs.data.auth.AuthManager
 import com.indusjs.domain.model.WorkLogResponse
 import com.indusjs.statustracker.AppStyles
+import com.indusjs.statustracker.components.ShowOptionMenu
 import com.indusjs.statustracker.model.ResourceUiState
 import com.indusjs.statustracker.utils.Redirection
 import com.indusjs.statustracker.viewmodel.WorkLogListViewModel
+import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -18,16 +23,20 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
+import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.PageContext
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.web.css.AlignItems
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.div
+import org.jetbrains.compose.web.dom.Div
+import org.jetbrains.compose.web.dom.Text
 import org.koin.compose.getKoin
 
 
@@ -44,6 +53,7 @@ fun WorkLogListPage(ctx: PageContext) {
     val learningEntries = remember { mutableStateListOf<WorkLogResponse>() }
 
     val workLogListViewModel = getKoin().get<WorkLogListViewModel>()
+    var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         workLogListViewModel.sendWorkLogListRequest()
@@ -62,10 +72,12 @@ fun WorkLogListPage(ctx: PageContext) {
 
                 }
                 is ResourceUiState.Idle -> {
+                    isLoading = false
                     println("Login Idle")
                 }
                 is ResourceUiState.Empty -> {
                     println("Login Empty")
+                    isLoading = false
                 }
                 is ResourceUiState.Loading -> {
                     println("Login Loading")
@@ -82,12 +94,23 @@ fun WorkLogListPage(ctx: PageContext) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        SpanText("My Learning Progress",
-            modifier = Modifier
-                .fontSize(AppStyles.FontSizeLarge)
-                .color(Color("Green"))
+        Row(modifier = Modifier.fillMaxWidth()) {
+            SpanText(
+                "Work Log List",
+                modifier = Modifier
+                    .alignItems(AlignItems.Start)
+                    .fontSize(AppStyles.FontSizeLarge)
+                    .color(AppStyles.COLOR_LABEL_TEXT)
+                    .padding(leftRight = 10.px, topBottom = 10.px)
                 //.margin(bottom = AppStyles.PaddingDefault * 2)
-        )
+            )
+            ShowOptionMenu(true, ctx, Modifier
+                .alignItems(AlignItems.End)
+                .margin(left = 100.px)
+                .padding(leftRight = 10.px, topBottom = 5.px)
+                .fontSize(12.px)
+                .borderRadius(8.px))
+        }
 
         Column(
             modifier = Modifier
@@ -96,7 +119,10 @@ fun WorkLogListPage(ctx: PageContext) {
         ) {
             if (learningEntries.isEmpty()) {
                 SpanText("No learning entries yet!", modifier = Modifier.fontSize(AppStyles.FontSizeMedium).color(AppStyles.TextColor))
-            } else {
+            } else if(isLoading) {
+                SpanText("Loading...", modifier = Modifier.fontSize(AppStyles.FontSizeMedium).color(AppStyles.TextColor))
+            }
+            else {
                 learningEntries.forEach { entry ->
                     LearningEntryRow(entry)
                 }

@@ -1,5 +1,6 @@
 package com.indusjs.statustracker.viewmodel
 
+import com.indusjs.data.auth.AuthManager
 import com.indusjs.data.repo.WorkLogBodyParam
 import com.indusjs.domain.usecase.worklog.WorkLogEntryUseCase
 import com.indusjs.statustracker.model.ResourceUiState
@@ -20,9 +21,10 @@ class WorkLogEntryViewModel(private val workLogUseCase: WorkLogEntryUseCase, pri
     fun sendWorkLogEntry(workLogEntry: WorkLogEntry) {
         _status.value = _status.value.copy(workLogEntryResponse = ResourceUiState.Loading)
         coroutineScope.launch {
-            val params = WorkLogBodyParam(chapter = workLogEntry.chapter, duration = 1,
+            val params = WorkLogBodyParam(chapter = workLogEntry.chapter, duration = workLogEntry.duration,
                 start_time = workLogEntry.startTime, end_time = workLogEntry.endTime, log_date = workLogEntry.date,
-                notes = workLogEntry.description, subject = workLogEntry.subject, subject_id = 1, topic = workLogEntry.task, user_id = 1)
+                notes = workLogEntry.description, subject = workLogEntry.subject, subject_id = workLogEntry.subjectId,
+                topic = workLogEntry.task, user_id = AuthManager.getCurrentUserId()!!, status = workLogEntry.status)
             workLogUseCase(params)
                 .onSuccess { _status.value = _status.value.copy(workLogEntryResponse = ResourceUiState.Success(it)) }
                 .onFailure {

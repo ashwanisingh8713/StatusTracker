@@ -22,7 +22,7 @@ import kotlinx.serialization.Serializable
 class WorkLogRepoImpl(private val endPoint: String, private val httpClient: HttpClient): IWorkLogRepo {
     override suspend fun workLogEntry(params: Any): WorkLogResponse {
         val bodyParam = params as? WorkLogBodyParam
-        //println("WorkLogEntry Request Body: $bodyParam")
+        println("WorkLogEntry Request Body: $bodyParam")
         val response: HttpResponse = httpClient.post() {
             url("$endPoint/work-session")
             setBody(bodyParam)
@@ -53,6 +53,6 @@ class WorkLogRepoImpl(private val endPoint: String, private val httpClient: Http
 }
 
 @Serializable
-data class WorkLogBodyParam(val chapter: String, val duration: Int, val start_time: String,
-                       val end_time: String, val log_date: String, val notes: String,
-    val subject: String, val subject_id: Int, val topic: String, val user_id: Int)
+data class WorkLogBodyParam(val chapter: String, val duration: String, val start_time: String, val end_time: String,
+                            val log_date: String, val notes: String, val subject: String, val subject_id: String,
+                            val topic: String, val user_id: String, val status: String)

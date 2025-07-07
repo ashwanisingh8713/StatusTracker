@@ -1,5 +1,12 @@
 package com.indusjs.statustracker.utils
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.format
+import kotlinx.datetime.format.DateTimeFormat
+import kotlinx.datetime.internal.JSJoda.DateTimeFormatter
+
+import kotlinx.datetime.internal.JSJoda.Locale
+
 class ValidationUtil {
     companion object {
         // To validate email
@@ -54,6 +61,13 @@ class ValidationUtil {
 
             return ""
         }
+    }
+
+    // This uses kotlinx-datetime's DateTimeFormat for robust formatting.
+    fun formatDateToDDMMYYYY(date: String): String {
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        val localDate = LocalDate.parse(date, formatter as DateTimeFormat<LocalDate>)
+        return localDate.toString()
     }
 
 }

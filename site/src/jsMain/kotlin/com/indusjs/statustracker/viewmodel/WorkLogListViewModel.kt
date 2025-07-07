@@ -20,7 +20,7 @@ class WorkLogListViewModel(private val workLogListUseCase: WorkLogListUseCase, p
             workLogListUseCase("")
                 .onSuccess { _status.value = _status.value.copy(workLogListResponse = ResourceUiState.Success(it)) }
                 .onFailure {
-                    println("Login Error ${it.cause?.message}")
+                    println("WorkLogListViewModel Error ${it.cause?.message}")
                     _status.value = _status.value.copy(workLogListResponse = ResourceUiState.Error(it.message))
                 }
 

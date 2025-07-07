@@ -13,7 +13,9 @@ import com.indusjs.statustracker.AppStyles.COLOR_INPUT_TEXT
 import com.indusjs.statustracker.AppStyles.COLOR_LABEL_TEXT
 import com.indusjs.statustracker.AppStyles.COLOR_OUTPUT_TEXT
 import com.indusjs.statustracker.components.MessageAlertDialog
+import com.indusjs.statustracker.components.ShowOptionMenu
 import com.indusjs.statustracker.components.Toast
+import com.indusjs.statustracker.components.VerticalThreeDotMenu
 import com.indusjs.statustracker.model.ResourceUiState
 import com.indusjs.statustracker.utils.Redirection
 import com.indusjs.statustracker.viewmodel.WorkLogEntryViewModel
@@ -24,7 +26,6 @@ import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
-import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
@@ -41,6 +42,7 @@ import com.varabyte.kobweb.silk.style.common.PlaceholderColor
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.attributes.disabled
 import org.jetbrains.compose.web.attributes.selected
@@ -49,18 +51,18 @@ import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.FlexDirection
 import org.jetbrains.compose.web.css.LineStyle
+import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.margin
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.*
 import org.koin.compose.getKoin
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 
 // Data class to represent a single work log entry
 data class WorkLogEntry(
-    /*val subject: String = "",
+    val subject: String = "",
     val date: String = "",
     val chapter: String = "",
     val task: String = "",
@@ -68,8 +70,9 @@ data class WorkLogEntry(
     val endTime: String = "",
     val duration: String = "",
     val status: String = "",
-    val description: String = ""*/
-    val subject: String = "Subject 01",
+    val description: String = "",
+    val subjectId : String = "1"
+    /*val subject: String = "Subject 01",
     val date: String = "2025-07-05T10:00:00Z",
     val chapter: String = "Chapter 01",
     val task: String = "Task 01",
@@ -77,7 +80,7 @@ data class WorkLogEntry(
     val endTime: String = "2025-07-05T10:00:00Z",
     val duration: Int = 1,
     val status: String = "Done",
-    val description: String = "This is description of task"
+    val description: String = "This is description of task"*/
 ) {
     fun isValid(): Boolean {
         // Check essential fields that are typically mandatory
@@ -114,7 +117,6 @@ fun DailyWorkLogPage(ctx: PageContext) {
         ctx.router.navigateTo(Redirection.LOGIN) // Navigate to a protected page
         println("User is not signed in")
     }
-
 
     val workLogEntryViewModel = getKoin().get<WorkLogEntryViewModel>()
 
@@ -180,13 +182,25 @@ fun DailyWorkLogPage(ctx: PageContext) {
                 verticalAlignment = if (isMobile) Alignment.Top else Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.thenIf(isMobile) { Modifier.fillMaxWidth().margin(bottom = 10.px) }) {
-                    SpanText(
-                        "Daily Work Log",
-                        modifier = Modifier
-                            .fontSize(if (isMobile) 24.px else 32.px)
-                            .color(COLOR_LABEL_TEXT)
-                            .fontWeight(FontWeight.Bold)
-                    )
+                    Row() {
+                        SpanText(
+                            "Work Log Entry",
+                            modifier = Modifier
+                                .fontSize(if (isMobile) 24.px else 32.px)
+                                .color(COLOR_LABEL_TEXT)
+                                .fontWeight(FontWeight.Bold)
+                        )
+
+                        if(isMobile) {
+                            ShowOptionMenu(false, ctx, Modifier
+                                .width(100.px)
+                                .alignItems(AlignItems.End)
+                                .margin(left = 100.px)
+                                .padding(leftRight = 10.px, topBottom = 10.px)
+                                .fontSize(12.px)
+                                .borderRadius(8.px))
+                        }
+                    }
                     SpanText(
                         "Log your tasks",
                         modifier = Modifier
@@ -199,20 +213,36 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     horizontalAlignment = if (isMobile) Alignment.Start else Alignment.End,
                     modifier = Modifier.thenIf(isMobile) { Modifier.fillMaxWidth().margin(top = 10.px) }
                 ) {
-                    SpanText("Date:", modifier = Modifier.margin(bottom = 5.px).color(COLOR_LABEL_TEXT).fontSize(14.px))
-                    Input(
-                        type = InputType.Date,
-                        value = workLogEntryData.date,
-                        onValueChange = { newDateValue->  workLogEntryData = workLogEntryData.copy(date = newDateValue)},
-                        modifier = Modifier
-                            .width(if (isMobile) 150.px else 150.px)
-                            .padding(8.px)
-                            .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
-                            .borderRadius(8.px)
-                            .fontSize(if (isMobile) 14.px else 16.px)
-                            .backgroundColor(COLOR_INPUT_BACKGROUND)
-                            .color(COLOR_INPUT_TEXT)
-                    )
+                    Row {
+
+                        SpanText(
+                            "Date:",
+                            modifier = Modifier.margin(bottom = 5.px).color(COLOR_LABEL_TEXT).padding(right = 8.px)
+                                .fontSize(14.px).align(alignment = Alignment.CenterVertically)
+                        )
+                        Input(
+                            type = InputType.Date,
+                            value = workLogEntryData.date,
+                            onValueChange = { newDateValue ->
+                                // Here date formatting has to be fixed
+                                val date = LocalDate.parse(newDateValue)
+                                println("Selected Date is $newDateValue")
+                                workLogEntryData = workLogEntryData.copy(date = newDateValue)
+                            },
+
+                            modifier = Modifier
+                                .width(if (isMobile) 150.px else 150.px)
+                                .padding(8.px)
+                                .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
+                                .borderRadius(8.px)
+                                .fontSize(if (isMobile) 14.px else 16.px)
+                                .backgroundColor(COLOR_INPUT_BACKGROUND)
+                                .color(COLOR_INPUT_TEXT)
+                        )
+                    }
+                }
+                if(!isMobile) {
+                    ShowOptionMenu(false, ctx, Modifier.position(Position.Relative))
                 }
             }
 
@@ -351,9 +381,9 @@ fun DailyWorkLogPage(ctx: PageContext) {
 
                 ResponsiveFormRow(label = "Duration:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
                     Input(
-                        type = InputType.Number,
+                        type = InputType.Text,
                         value = workLogEntryData.duration,
-                        onValueChange = { duration -> workLogEntryData = workLogEntryData.copy(duration = duration as Int)  },
+                        onValueChange = { duration -> workLogEntryData = workLogEntryData.copy(duration = duration)  },
                         modifier = mod
                             .padding(8.px)
                             .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
@@ -443,6 +473,7 @@ fun DailyWorkLogPage(ctx: PageContext) {
                 }
             }
 
+            // Preview UIs
             if (workLogs.isNotEmpty()) {
                 Hr(attrs = { style { margin(20.px, 0.px) } })
                 SpanText(
