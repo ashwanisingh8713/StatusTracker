@@ -14,6 +14,7 @@ import com.indusjs.statustracker.components.ShowOptionMenu
 import com.indusjs.statustracker.model.ResourceUiState
 import com.indusjs.statustracker.utils.Redirection
 import com.indusjs.statustracker.viewmodel.WorkLogListViewModel
+import com.varabyte.kobweb.compose.css.FontStyle
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -34,7 +35,9 @@ import org.jetbrains.compose.web.css.AlignItems
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
+import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.div
+import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Text
 import org.koin.compose.getKoin
@@ -86,6 +89,9 @@ fun WorkLogListPage(ctx: PageContext) {
         }
     }
 
+    val currentBreakpoint = rememberBreakpoint()
+    val isMobile = currentBreakpoint <= Breakpoint.MD
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -94,22 +100,21 @@ fun WorkLogListPage(ctx: PageContext) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            SpanText(
-                "Work Log List",
-                modifier = Modifier
-                    .alignItems(AlignItems.Start)
-                    .fontSize(AppStyles.FontSizeLarge)
-                    .color(AppStyles.COLOR_LABEL_TEXT)
-                    .padding(leftRight = 10.px, topBottom = 10.px)
-                //.margin(bottom = AppStyles.PaddingDefault * 2)
-            )
-            ShowOptionMenu(true, ctx, Modifier
-                .alignItems(AlignItems.End)
-                .margin(left = 100.px)
-                .padding(leftRight = 10.px, topBottom = 5.px)
-                .fontSize(12.px)
-                .borderRadius(8.px))
+        Row {
+                SpanText(
+                    "Work Log List",
+                    modifier = Modifier
+                        .width(50.percent)
+                        .fontSize(AppStyles.FontSizeNormal).fontWeight(FontWeight.Bold)
+                        .color(AppStyles.COLOR_LABEL_TEXT)
+                        .padding(leftRight = 10.px, top = 10.px)
+                )
+                ShowOptionMenu(
+                    true,
+                    ctx,
+                    Modifier.position(Position.Relative).padding(top = 1.px, bottom = 10.px).margin(left = 100.px)
+                )
+
         }
 
         Column(
@@ -160,7 +165,7 @@ fun LearningEntryRowMobile(entry: WorkLogResponse, modifier: Modifier = Modifier
     ) {
         // Main details (Subject, Chapter, Topic)
         Column {
-            SpanText("Subject: ${entry.subject}", modifier = Modifier.fontSize(AppStyles.FontSizeMedium).color(AppStyles.TextColor).fontWeight(com.varabyte.kobweb.compose.css.FontWeight.Bold))
+            SpanText("Subject: ${entry.subject}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor).fontWeight(FontWeight.Bold))
             SpanText("Chapter: ${entry.chapter}", modifier = Modifier.fontSize(AppStyles.FontSizeNormal).color(AppStyles.TextColor))
             SpanText("Topic: ${entry.topic}", modifier = Modifier.fontSize(AppStyles.FontSizeNormal).color(AppStyles.TextColor))
         }
@@ -175,8 +180,12 @@ fun LearningEntryRowMobile(entry: WorkLogResponse, modifier: Modifier = Modifier
                 SpanText("Start: ${entry.start_time}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
                 SpanText("End: ${entry.end_time}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
             }
-            SpanText("Duration: ${entry.duration}", modifier = Modifier.fontSize(AppStyles.FontSizeNormal).color(AppStyles.SecondaryColor).fontWeight(com.varabyte.kobweb.compose.css.FontWeight.Bold))
+            Column {
+            SpanText("Date: ${entry.log_date}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.SecondaryColor).fontWeight(FontWeight.Bold))
+            SpanText("Duration: ${entry.duration}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.SecondaryColor).fontWeight(FontWeight.Bold))
         }
+        }
+
 
         // Status and Description
         val statusColor = when (entry.status) {
@@ -185,7 +194,7 @@ fun LearningEntryRowMobile(entry: WorkLogResponse, modifier: Modifier = Modifier
             "In Progress" -> AppStyles.CompletedColor
             else -> AppStyles.TextColor
         }
-        SpanText("Status: ${entry.status}", modifier = Modifier.fontSize(AppStyles.FontSizeNormal).color(statusColor).fontWeight(com.varabyte.kobweb.compose.css.FontWeight.Bold).margin(top = AppStyles.MarginDefault / 2))
+        SpanText("Status: ${entry.status}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(statusColor).fontWeight(FontWeight.Bold).margin(top = AppStyles.MarginDefault / 2))
         SpanText("Description: ${entry.notes}",
             modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor).margin(top = AppStyles.MarginDefault / 4))
     }
@@ -204,8 +213,7 @@ fun LearningEntryRowDesktop(entry: WorkLogResponse, modifier: Modifier = Modifie
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         // Left section: Subject, Chapter, Topic
-        Column(modifier = Modifier
-            .flexGrow(1)
+        Column(modifier = Modifier.width(30.percent)
             .padding(right = AppStyles.MarginDefault)) {
             SpanText("Subject: ${entry.subject}", modifier = Modifier.fontSize(AppStyles.FontSizeMedium).color(AppStyles.TextColor))
             SpanText("Chapter: ${entry.chapter}", modifier = Modifier.fontSize(AppStyles.FontSizeNormal).color(AppStyles.TextColor))
@@ -213,8 +221,8 @@ fun LearningEntryRowDesktop(entry: WorkLogResponse, modifier: Modifier = Modifie
         }
 
         // Middle section: Time and Duration
-        Column(modifier = Modifier
-            .flexGrow(1)
+        Column(modifier = Modifier.width(20.percent)
+            .flexGrow(1f)
             .padding(right = AppStyles.MarginDefault)) {
             SpanText("Start: ${entry.start_time}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
             SpanText("End: ${entry.end_time}", modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
@@ -222,15 +230,16 @@ fun LearningEntryRowDesktop(entry: WorkLogResponse, modifier: Modifier = Modifie
         }
 
         // Right section: Status and Description (can be a summary or full text)
-        Column(modifier = Modifier.flexGrow(1f)) {
+        Column(modifier = Modifier.width(40.percent)) {
             val statusColor = when (entry.status) {
                 "Completed" -> AppStyles.SuccessColor
                 "Pending" -> AppStyles.PendingColor
                 "In Progress" -> AppStyles.CompletedColor // Using a different blue for in progress
                 else -> AppStyles.TextColor
             }
+            SpanText("Date: ${entry.log_date}", modifier = Modifier.fontSize(AppStyles.FontSizeNormal).color(statusColor))
             SpanText("Status: ${entry.status}", modifier = Modifier.fontSize(AppStyles.FontSizeNormal).color(statusColor))
-            SpanText("Description: ${entry.notes.take(50)}...", // Truncate for brevity in list
+            SpanText("Description: ${entry.notes}",
                 modifier = Modifier.fontSize(AppStyles.FontSizeSmall).color(AppStyles.TextColor))
         }
     }
