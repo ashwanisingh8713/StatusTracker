@@ -61,13 +61,42 @@ class ValidationUtil {
 
             return ""
         }
+
+        // This uses kotlinx-datetime's DateTimeFormat for robust formatting.
+        fun formatDateToDDMMYYYY(date: String): String {
+//            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-DD")
+            val localDate = LocalDate.parse(date, formatter as DateTimeFormat<LocalDate>)
+            return localDate.toString()
+        }
+
+        fun Int.formatt(): String{
+            return if(this<10 && this>=0) "0"+this.toString() else this.toString()
+        }
+
+
+        fun convertTo12HourFormat(time24: String): String {
+            val parts = time24.split(":")
+            var hours = parts[0].toInt()
+            val minutes = parts[1].toInt()
+
+            val period: String
+            if (hours >= 12) {
+                period = "PM"
+            } else {
+                period = "AM"
+            }
+            hours = hours % 12
+            if (hours == 0) {
+                hours = 12 // Convert 0 (midnight) to 12 AM
+            }
+            val formattedMinutes = if (minutes < 10) "0$minutes" else minutes.formatt()
+            return "${hours.formatt()}:$formattedMinutes $period"
+        }
+
     }
 
-    // This uses kotlinx-datetime's DateTimeFormat for robust formatting.
-    fun formatDateToDDMMYYYY(date: String): String {
-        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-        val localDate = LocalDate.parse(date, formatter as DateTimeFormat<LocalDate>)
-        return localDate.toString()
-    }
+
+
 
 }

@@ -18,6 +18,7 @@ import com.indusjs.statustracker.components.Toast
 import com.indusjs.statustracker.components.VerticalThreeDotMenu
 import com.indusjs.statustracker.model.ResourceUiState
 import com.indusjs.statustracker.utils.Redirection
+import com.indusjs.statustracker.utils.ValidationUtil
 import com.indusjs.statustracker.viewmodel.WorkLogEntryViewModel
 import com.varabyte.kobweb.compose.css.FontStyle
 import com.varabyte.kobweb.compose.css.FontWeight
@@ -68,19 +69,11 @@ data class WorkLogEntry(
     val task: String = "",
     val startTime: String = "",
     val endTime: String = "",
-    val duration: String = "",
+    val duration: Int = 0,
     val status: String = "",
     val description: String = "",
     val subjectId : String = "1"
-    /*val subject: String = "Subject 01",
-    val date: String = "2025-07-05T10:00:00Z",
-    val chapter: String = "Chapter 01",
-    val task: String = "Task 01",
-    val startTime: String = "2025-07-05T10:00:00Z",
-    val endTime: String = "2025-07-05T10:00:00Z",
-    val duration: Int = 1,
-    val status: String = "Done",
-    val description: String = "This is description of task"*/
+
 ) {
     fun isValid(): Boolean {
         // Check essential fields that are typically mandatory
@@ -133,8 +126,9 @@ fun DailyWorkLogPage(ctx: PageContext) {
         workLogEntryViewModel.status.collectLatest {
             when(it.workLogEntryResponse) {
                 is ResourceUiState.Success -> {
-                    toastMessage = "Date and Task are required fields. Category and Status are recommended."
+                    toastMessage = "Your work log entry has been saved successfully."
                     showToast = true
+                    workLogEntryData = WorkLogEntry()
                     //ctx.router.navigateTo(Redirection.DAILY_WORK_LOG) // Navigate to a protected page
                     println("Login Success")
                 }
@@ -224,9 +218,6 @@ fun DailyWorkLogPage(ctx: PageContext) {
                             type = InputType.Date,
                             value = workLogEntryData.date,
                             onValueChange = { newDateValue ->
-                                // Here date formatting has to be fixed
-                                val date = LocalDate.parse(newDateValue)
-                                println("Selected Date is $newDateValue")
                                 workLogEntryData = workLogEntryData.copy(date = newDateValue)
                             },
 
@@ -325,6 +316,7 @@ fun DailyWorkLogPage(ctx: PageContext) {
                                 .borderRadius(8.px)
                                 .fontSize(if (mobile) 14.px else 16.px)
                                 .backgroundColor(COLOR_INPUT_BACKGROUND)
+                                .color(COLOR_INPUT_TEXT)
                         )
                     }
                     ResponsiveFormRow(label = "End Time:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
@@ -338,6 +330,7 @@ fun DailyWorkLogPage(ctx: PageContext) {
                                 .borderRadius(8.px)
                                 .fontSize(if (mobile) 14.px else 16.px)
                                 .backgroundColor(COLOR_INPUT_BACKGROUND)
+                                .color(COLOR_INPUT_TEXT)
                         )
                     }
                 } else {
@@ -350,7 +343,8 @@ fun DailyWorkLogPage(ctx: PageContext) {
                             Input(
                                 type = InputType.Time,
                                 value = workLogEntryData.startTime,
-                                onValueChange = { startTime -> workLogEntryData = workLogEntryData.copy(startTime = startTime) },
+                                onValueChange = { startTime -> println("Ashwani Time ${ValidationUtil.convertTo12HourFormat(startTime)}")
+                                    workLogEntryData = workLogEntryData.copy(startTime = startTime) },
                                 placeholder = "Start",
                                 modifier = Modifier
                                     .weight(1f)
@@ -381,9 +375,9 @@ fun DailyWorkLogPage(ctx: PageContext) {
 
                 ResponsiveFormRow(label = "Duration:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
                     Input(
-                        type = InputType.Text,
+                        type = InputType.Number,
                         value = workLogEntryData.duration,
-                        onValueChange = { duration -> workLogEntryData = workLogEntryData.copy(duration = duration)  },
+                        onValueChange = { duration -> workLogEntryData = workLogEntryData.copy(duration = duration as Int)  },
                         modifier = mod
                             .padding(8.px)
                             .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
@@ -565,7 +559,7 @@ fun DailyWorkLogPage(ctx: PageContext) {
     }
 
     if(showToast) {
-        Toast(toastMessage, showToast) { showToast = false }
+        Toast(toastMessage, isMobile,showToast) { showToast = false }
     }
 }
 

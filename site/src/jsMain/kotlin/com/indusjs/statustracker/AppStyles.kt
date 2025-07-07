@@ -38,6 +38,7 @@ object AppStyles {
     val COLOR_CONTAINER_BACKGROUND = Color("#8EB0E1")
     val COLOR_CONTAINER_SHADOW = Color("#C4787C")
     val COLOR_INNER_CONTAINER_SHADOW = Color("#FFC44F")
+    val COLOR_TOAST_BACKGROUND = Color("#aea8a690")
     val COLOR_INPUT_BORDER = Color("#2D2D5A")
 
     // Font Sizes

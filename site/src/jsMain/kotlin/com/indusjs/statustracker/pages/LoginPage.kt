@@ -55,11 +55,26 @@ fun LoginPage(ctx: PageContext) {
     var showToast by remember { mutableStateOf(false) }
     var toastMessage by remember { mutableStateOf("") }
 
+//    val isMobile = breakpoint >= Breakpoint.MD
+    val isMobile = breakpoint <= Breakpoint.MD
 
     KobwebColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        if (breakpoint >= Breakpoint.MD) {
+        if (isMobile) {
+            Box(
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                contentAlignment = Alignment.Center
+            ) {
+                LoginSection(
+                    ctx = ctx,
+                    onForgotPasswordClick = { showForgotPasswordDialog = true }) { show, message ->
+                    showToast = show
+                    toastMessage = message
+                }
+            }
+
+        } else {
             KobwebRow(modifier = Modifier.fillMaxSize()) {
                 Box(
                     modifier = Modifier.weight(0.4f).fillMaxHeight(),
@@ -79,18 +94,6 @@ fun LoginPage(ctx: PageContext) {
                         .backgroundColor(Color("#29323C")) // Dark background color
                 ) {
                     MarketingSection()
-                }
-            }
-        } else {
-            Box(
-                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-                contentAlignment = Alignment.Center
-            ) {
-                LoginSection(
-                    ctx = ctx,
-                    onForgotPasswordClick = { showForgotPasswordDialog = true }) { show, message ->
-                    showToast = show
-                    toastMessage = message
                 }
             }
         }
@@ -123,7 +126,7 @@ fun LoginPage(ctx: PageContext) {
         )
     }
 
-    Toast(message = toastMessage, visible = showToast) {
+    Toast(message = toastMessage, isMobile, visible = showToast) {
         showToast = false
     }
 
