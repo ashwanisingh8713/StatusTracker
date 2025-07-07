@@ -4,6 +4,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 import kotlinx.datetime.format.DateTimeFormat
 import kotlinx.datetime.internal.JSJoda.DateTimeFormatter
+import kotlinx.datetime.internal.JSJoda.DateTimeParseException
+import kotlinx.datetime.internal.JSJoda.Duration
+import kotlinx.datetime.internal.JSJoda.LocalTime
 
 import kotlinx.datetime.internal.JSJoda.Locale
 
@@ -70,8 +73,8 @@ class ValidationUtil {
             return localDate.toString()
         }
 
-        fun Int.formatt(): String{
-            return if(this<10 && this>=0) "0"+this.toString() else this.toString()
+        fun Int.formatt(): String {
+            return if (this < 10 && this >= 0) "0" + this.toString() else this.toString()
         }
 
 
@@ -94,9 +97,40 @@ class ValidationUtil {
             return "${hours.formatt()}:$formattedMinutes $period"
         }
 
+
+        /**
+         * Checks if startTime is before endTime and calculates the total minute difference.
+         *
+         * @param startTime A string representing the start time in "HH:MM" 24-hour format.
+         * @param endTime A string representing the end time in "HH:MM" 24-hour format.
+         * @return A Pair where:
+         * - first (Boolean) is true if startTime is before endTime, false otherwise.
+         * - second (Int) is the total minute difference between endTime and startTime.
+         * Returns -1 if there's a parsing error for either time.
+         */
+        fun checkAndCalculateTimeDifference(
+            startTime: String,
+            endTime: String
+        ): Pair<Boolean, Int> {
+            try {
+                val startLocalTime = LocalTime.parse(startTime)
+                val endLocalTime = LocalTime.parse(endTime)
+
+                val isStartTimeBeforeEndTime = startLocalTime.isBefore(endLocalTime)
+
+                val duration = Duration.between(startLocalTime, endLocalTime)
+                val totalMinutesDifference = duration.toMinutes().toInt()
+
+                return Pair(isStartTimeBeforeEndTime, totalMinutesDifference)
+
+            } catch (e: DateTimeParseException) {
+                // Handle cases where the time strings are not in the correct format
+                println("Error parsing time: ${e.message}")
+                return Pair(false, -1) // Indicate an error
+            }
+        }
+
+
     }
-
-
-
 
 }

@@ -2,6 +2,7 @@ package com.indusjs.statustracker.pages
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import com.indusjs.data.auth.AuthManager
 import com.varabyte.kobweb.compose.css.StyleVariable
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -24,8 +25,11 @@ import org.jetbrains.compose.web.dom.Div
 import com.indusjs.statustracker.components.layouts.PageLayoutData
 import com.indusjs.statustracker.components.LoginSection
 import com.indusjs.statustracker.components.MarketingSection
+import com.indusjs.statustracker.utils.Redirection
 import com.indusjs.statustracker.utils.rememberWindowWidth
 import com.varabyte.kobweb.compose.ui.Alignment
+import com.varabyte.kobweb.core.PageContext
+import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.css.*
 // MAKE SURE THESE TWO IMPORTS ARE PRESENT:
@@ -76,8 +80,14 @@ fun initHomePage(ctx: InitRouteContext) {
 @Page
 @Layout(".components.layouts.PageLayout")
 @Composable
-fun HomePage() {
-
+fun HomePage(ctx: PageContext) {
+    if (AuthManager.isSignedIn()) {
+        println("User is signed in")
+        ctx.router.navigateTo(Redirection.DAILY_WORK_LOG)
+    } else {
+        ctx.router.navigateTo(Redirection.LOGIN) // Navigate to a protected page
+        println("User is not signed in")
+    }
 }
 
 

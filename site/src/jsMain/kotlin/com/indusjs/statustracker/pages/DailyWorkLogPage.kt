@@ -72,7 +72,7 @@ data class WorkLogEntry(
     val duration: Int = 0,
     val status: String = "",
     val description: String = "",
-    val subjectId : String = "1"
+    val subjectId: String = "1"
 
 ) {
     fun isValid(): Boolean {
@@ -98,13 +98,12 @@ val SUBJECTS = listOf(
 val STATUSES = listOf("In progress", "Done", "Doubt", "ToDo")
 
 
-
 @OptIn(ExperimentalTime::class)
 @Page(Redirection.DAILY_WORK_LOG)
 @Composable
 fun DailyWorkLogPage(ctx: PageContext) {
 
-    if(AuthManager.isSignedIn()) {
+    if (AuthManager.isSignedIn()) {
         println("User is signed in")
     } else {
         ctx.router.navigateTo(Redirection.LOGIN) // Navigate to a protected page
@@ -116,15 +115,16 @@ fun DailyWorkLogPage(ctx: PageContext) {
     val workLogs = remember { mutableStateListOf<WorkLogEntry>() }
     var workLogEntryData by remember { mutableStateOf(WorkLogEntry()) }
     var showToast by remember { mutableStateOf(false) }
-    var toastMessage  by remember { mutableStateOf("") }
+    var toastMessage by remember { mutableStateOf("") }
     var showMessageAlertDialog by remember { mutableStateOf(false) }
     var messageAlertDialog by remember { mutableStateOf("") }
 
-    val addEntryOnClick = {workLogEntry: WorkLogEntry -> workLogEntryViewModel.sendWorkLogEntry(workLogEntry)}
+    val addEntryOnClick =
+        { workLogEntry: WorkLogEntry -> workLogEntryViewModel.sendWorkLogEntry(workLogEntry) }
 
     workLogEntryViewModel.getCoroutineScope.launch {
         workLogEntryViewModel.status.collectLatest {
-            when(it.workLogEntryResponse) {
+            when (it.workLogEntryResponse) {
                 is ResourceUiState.Success -> {
                     toastMessage = "Your work log entry has been saved successfully."
                     showToast = true
@@ -132,17 +132,21 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     //ctx.router.navigateTo(Redirection.DAILY_WORK_LOG) // Navigate to a protected page
                     println("Login Success")
                 }
+
                 is ResourceUiState.Error -> {
-                    messageAlertDialog = "Error! "+it.workLogEntryResponse.message!!
+                    messageAlertDialog = "Error! " + it.workLogEntryResponse.message!!
                     showMessageAlertDialog = true
                     println("Login Error ${it.workLogEntryResponse.message}")
                 }
+
                 is ResourceUiState.Idle -> {
                     println("Login Idle")
                 }
+
                 is ResourceUiState.Empty -> {
                     println("Login Empty")
                 }
+
                 is ResourceUiState.Loading -> {
                     println("Login Loading")
                 }
@@ -175,7 +179,9 @@ fun DailyWorkLogPage(ctx: PageContext) {
                 horizontalArrangement = if (isMobile) Arrangement.Start else Arrangement.SpaceBetween,
                 verticalAlignment = if (isMobile) Alignment.Top else Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.thenIf(isMobile) { Modifier.fillMaxWidth().margin(bottom = 10.px) }) {
+                Column(modifier = Modifier.thenIf(isMobile) {
+                    Modifier.fillMaxWidth().margin(bottom = 10.px)
+                }) {
                     Row() {
                         SpanText(
                             "Work Log Entry",
@@ -185,14 +191,16 @@ fun DailyWorkLogPage(ctx: PageContext) {
                                 .fontWeight(FontWeight.Bold)
                         )
 
-                        if(isMobile) {
-                            ShowOptionMenu(false, ctx, Modifier
-                                .width(100.px)
-                                .alignItems(AlignItems.End)
-                                .margin(left = 100.px)
-                                .padding(leftRight = 10.px, topBottom = 10.px)
-                                .fontSize(12.px)
-                                .borderRadius(8.px))
+                        if (isMobile) {
+                            ShowOptionMenu(
+                                false, ctx, Modifier
+                                    .width(100.px)
+                                    .alignItems(AlignItems.End)
+                                    .margin(left = 100.px)
+                                    .padding(leftRight = 10.px, topBottom = 10.px)
+                                    .fontSize(12.px)
+                                    .borderRadius(8.px)
+                            )
                         }
                     }
                     SpanText(
@@ -205,13 +213,16 @@ fun DailyWorkLogPage(ctx: PageContext) {
                 }
                 Column(
                     horizontalAlignment = if (isMobile) Alignment.Start else Alignment.End,
-                    modifier = Modifier.thenIf(isMobile) { Modifier.fillMaxWidth().margin(top = 10.px) }
+                    modifier = Modifier.thenIf(isMobile) {
+                        Modifier.fillMaxWidth().margin(top = 10.px)
+                    }
                 ) {
                     Row {
 
                         SpanText(
                             "Date:",
-                            modifier = Modifier.margin(bottom = 5.px).color(COLOR_LABEL_TEXT).padding(right = 8.px)
+                            modifier = Modifier.margin(bottom = 5.px).color(COLOR_LABEL_TEXT)
+                                .padding(right = 8.px)
                                 .fontSize(14.px).align(alignment = Alignment.CenterVertically)
                         )
                         Input(
@@ -232,7 +243,7 @@ fun DailyWorkLogPage(ctx: PageContext) {
                         )
                     }
                 }
-                if(!isMobile) {
+                if (!isMobile) {
                     ShowOptionMenu(false, ctx, Modifier.position(Position.Relative))
                 }
             }
@@ -260,7 +271,9 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     DropdownInput(
                         selectedItem = workLogEntryData.subject,
                         items = SUBJECTS,
-                        onValueChange = { subject -> workLogEntryData = workLogEntryData.copy(subject= subject) },
+                        onValueChange = { subject ->
+                            workLogEntryData = workLogEntryData.copy(subject = subject)
+                        },
                         modifier = mod
                             .padding(8.px)
                             .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
@@ -270,11 +283,16 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     )
                 }
 
-                ResponsiveFormRow(label = "Chapter/Section:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
+                ResponsiveFormRow(
+                    label = "Chapter/Section:",
+                    colorLabelText = COLOR_LABEL_TEXT
+                ) { mod, mobile ->
                     Input(
                         type = InputType.Text,
                         value = workLogEntryData.chapter,
-                        onValueChange = { chapter -> workLogEntryData = workLogEntryData.copy(chapter = chapter)},
+                        onValueChange = { chapter ->
+                            workLogEntryData = workLogEntryData.copy(chapter = chapter)
+                        },
                         placeholder = "Chapter/Section of work or learning",
                         placeholderColor = PlaceholderColor(COLOR_INPUT_TEXT, opacity = 0.4),
                         modifier = mod
@@ -287,11 +305,16 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     )
                 }
 
-                ResponsiveFormRow(label = "Task/Topic:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
+                ResponsiveFormRow(
+                    label = "Task/Topic:",
+                    colorLabelText = COLOR_LABEL_TEXT
+                ) { mod, mobile ->
                     Input(
                         type = InputType.Text,
                         value = workLogEntryData.task,
-                        onValueChange = { task -> workLogEntryData = workLogEntryData.copy(task = task) },
+                        onValueChange = { task ->
+                            workLogEntryData = workLogEntryData.copy(task = task)
+                        },
                         placeholder = "Topic of work or learning",
                         placeholderColor = PlaceholderColor(COLOR_INPUT_TEXT, opacity = 0.4),
                         modifier = mod
@@ -305,11 +328,34 @@ fun DailyWorkLogPage(ctx: PageContext) {
                 }
 
                 if (isMobile) {
-                    ResponsiveFormRow(label = "Start Time:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
+                    ResponsiveFormRow(
+                        label = "Start Time:",
+                        colorLabelText = COLOR_LABEL_TEXT
+                    ) { mod, mobile ->
                         Input(
                             type = InputType.Time,
                             value = workLogEntryData.startTime,
-                            onValueChange = { startTime -> workLogEntryData = workLogEntryData.copy(startTime = startTime) },
+                            onValueChange = { startTime ->
+                                if (workLogEntryData.endTime.isNotEmpty()) {
+                                    val pair = ValidationUtil.checkAndCalculateTimeDifference(
+                                        startTime = startTime,
+                                        endTime = workLogEntryData.endTime
+                                    )
+                                    if (pair.first) {
+                                        workLogEntryData =
+                                            workLogEntryData.copy(startTime = startTime, duration = pair.second)
+                                    } else {
+                                        messageAlertDialog =
+                                            "Start time cannot be after end time."
+                                        showMessageAlertDialog = true
+                                        workLogEntryData =
+                                            workLogEntryData.copy(startTime = "")
+                                    }
+                                } else {
+                                    workLogEntryData =
+                                        workLogEntryData.copy(startTime = startTime)
+                                }
+                            },
                             modifier = mod
                                 .padding(8.px)
                                 .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
@@ -319,11 +365,32 @@ fun DailyWorkLogPage(ctx: PageContext) {
                                 .color(COLOR_INPUT_TEXT)
                         )
                     }
-                    ResponsiveFormRow(label = "End Time:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
+                    ResponsiveFormRow(
+                        label = "End Time:",
+                        colorLabelText = COLOR_LABEL_TEXT
+                    ) { mod, mobile ->
                         Input(
                             type = InputType.Time,
                             value = workLogEntryData.endTime,
-                            onValueChange = { endTime -> workLogEntryData = workLogEntryData.copy(endTime = endTime) },
+                            onValueChange = { endTime ->
+                                if (workLogEntryData.startTime.isNotEmpty()) {
+                                    val pair = ValidationUtil.checkAndCalculateTimeDifference(
+                                        startTime = workLogEntryData.startTime,
+                                        endTime = endTime
+                                    )
+                                    if (pair.first) {
+                                        workLogEntryData =
+                                            workLogEntryData.copy(endTime = endTime, duration = pair.second)
+                                    } else {
+                                        messageAlertDialog =
+                                            "End time cannot be before start time."
+                                        showMessageAlertDialog = true
+                                        workLogEntryData = workLogEntryData.copy(endTime = "")
+                                    }
+                                } else {
+                                    workLogEntryData = workLogEntryData.copy(endTime = endTime)
+                                }
+                            },
                             modifier = mod
                                 .padding(8.px)
                                 .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
@@ -334,7 +401,10 @@ fun DailyWorkLogPage(ctx: PageContext) {
                         )
                     }
                 } else {
-                    ResponsiveFormRow(label = "Time:", colorLabelText = COLOR_LABEL_TEXT) { mod, _ ->
+                    ResponsiveFormRow(
+                        label = "Time:",
+                        colorLabelText = COLOR_LABEL_TEXT
+                    ) { mod, _ ->
                         Row(
                             modifier = mod,
                             verticalAlignment = Alignment.CenterVertically,
@@ -343,8 +413,27 @@ fun DailyWorkLogPage(ctx: PageContext) {
                             Input(
                                 type = InputType.Time,
                                 value = workLogEntryData.startTime,
-                                onValueChange = { startTime -> println("Ashwani Time ${ValidationUtil.convertTo12HourFormat(startTime)}")
-                                    workLogEntryData = workLogEntryData.copy(startTime = startTime) },
+                                onValueChange = { startTime ->
+                                    if (workLogEntryData.endTime.isNotEmpty()) {
+                                        val pair = ValidationUtil.checkAndCalculateTimeDifference(
+                                            startTime = startTime,
+                                            endTime = workLogEntryData.endTime
+                                        )
+                                        if (pair.first) {
+                                            workLogEntryData =
+                                                workLogEntryData.copy(startTime = startTime, duration = pair.second)
+                                        } else {
+                                            messageAlertDialog =
+                                                "Start time cannot be after end time."
+                                            showMessageAlertDialog = true
+                                            workLogEntryData =
+                                                workLogEntryData.copy(startTime = "")
+                                        }
+                                    } else {
+                                        workLogEntryData =
+                                            workLogEntryData.copy(startTime = startTime)
+                                    }
+                                },
                                 placeholder = "Start",
                                 modifier = Modifier
                                     .weight(1f)
@@ -358,7 +447,25 @@ fun DailyWorkLogPage(ctx: PageContext) {
                             Input(
                                 type = InputType.Time,
                                 value = workLogEntryData.endTime,
-                                onValueChange = { endTime -> workLogEntryData = workLogEntryData.copy(endTime = endTime)},
+                                onValueChange = { endTime ->
+                                    if (workLogEntryData.startTime.isNotEmpty()) {
+                                        val pair = ValidationUtil.checkAndCalculateTimeDifference(
+                                            startTime = workLogEntryData.startTime,
+                                            endTime = endTime
+                                        )
+                                        if (pair.first) {
+                                            workLogEntryData =
+                                                workLogEntryData.copy(endTime = endTime, duration = pair.second)
+                                        } else {
+                                            messageAlertDialog =
+                                                "End time cannot be before start time."
+                                            showMessageAlertDialog = true
+                                            workLogEntryData = workLogEntryData.copy(endTime = "")
+                                        }
+                                    } else {
+                                        workLogEntryData = workLogEntryData.copy(endTime = endTime)
+                                    }
+                                },
                                 placeholder = "End",
                                 modifier = Modifier
                                     .weight(1f)
@@ -373,11 +480,17 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     }
                 }
 
-                ResponsiveFormRow(label = "Duration:", colorLabelText = COLOR_LABEL_TEXT) { mod, mobile ->
+                ResponsiveFormRow(
+                    label = "Duration:",
+                    colorLabelText = COLOR_LABEL_TEXT
+                ) { mod, mobile ->
                     Input(
-                        type = InputType.Number,
-                        value = workLogEntryData.duration,
-                        onValueChange = { duration -> workLogEntryData = workLogEntryData.copy(duration = duration as Int)  },
+                        type = InputType.Text,
+                        value = if(workLogEntryData.duration == 0) "" else "${workLogEntryData.duration} Mins",
+                        enabled = false,
+                        onValueChange = { duration ->
+                            workLogEntryData = workLogEntryData.copy(duration = duration as Int)
+                        },
                         modifier = mod
                             .padding(8.px)
                             .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
@@ -392,7 +505,9 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     DropdownInput(
                         selectedItem = workLogEntryData.status,
                         items = STATUSES,
-                        onValueChange = { status -> workLogEntryData = workLogEntryData.copy(status = status) },
+                        onValueChange = { status ->
+                            workLogEntryData = workLogEntryData.copy(status = status)
+                        },
                         modifier = mod
                             .padding(8.px)
                             .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
@@ -402,7 +517,10 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     )
                 }
 
-                ResponsiveFormRow(label = "Description:", colorLabelText = COLOR_LABEL_TEXT) { mod, isNestedMobile ->
+                ResponsiveFormRow(
+                    label = "Description:",
+                    colorLabelText = COLOR_LABEL_TEXT
+                ) { mod, isNestedMobile ->
                     val textAreaModifier = mod
                         .minHeight(80.px)
                         .padding(8.px)
@@ -416,7 +534,10 @@ fun DailyWorkLogPage(ctx: PageContext) {
                         value = workLogEntryData.description,
                         attrs = textAreaModifier.toAttrs(
                             finalHandler = {
-                                onInput { description -> workLogEntryData = workLogEntryData.copy(description = description.value) }
+                                onInput { description ->
+                                    workLogEntryData =
+                                        workLogEntryData.copy(description = description.value)
+                                }
                             }
                         )
                     )
@@ -451,7 +572,8 @@ fun DailyWorkLogPage(ctx: PageContext) {
                                 addEntryOnClick(workLogEntryData)
                             } else {
                                 println("Date and Task are required fields. Category and Status are recommended.")
-                                messageAlertDialog = "Date and Task are required fields. Category and Status are recommended."
+                                messageAlertDialog =
+                                    "Date and Task are required fields. Category and Status are recommended."
                                 showMessageAlertDialog = true
                             }
                         },
@@ -504,21 +626,35 @@ fun DailyWorkLogPage(ctx: PageContext) {
                                         .fontSize(if (isMobile) 16.px else 18.px)
                                 )
                                 SpanText(
-                                    "Date: "+entry.date,
+                                    "Date: " + entry.date,
                                     modifier = Modifier
                                         .color(COLOR_OUTPUT_TEXT)
                                         .fontSize(if (isMobile) 12.px else 14.px)
                                 )
                             }
-                            SpanText("Subject: ${entry.subject}", modifier = Modifier.margin(top = 6.px).color(COLOR_OUTPUT_TEXT).fontSize(if (isMobile) 13.px else 15.px))
+                            SpanText(
+                                "Subject: ${entry.subject}",
+                                modifier = Modifier.margin(top = 6.px).color(COLOR_OUTPUT_TEXT)
+                                    .fontSize(if (isMobile) 13.px else 15.px)
+                            )
                             if (entry.startTime.isNotBlank() || entry.endTime.isNotBlank()) {
-                                SpanText("Time: ${entry.startTime.ifBlank { "--:--" }} - ${entry.endTime.ifBlank { "--:--" }}", modifier = Modifier.color(COLOR_OUTPUT_TEXT).fontSize(if (isMobile) 13.px else 15.px))
+                                SpanText(
+                                    "Time: ${entry.startTime.ifBlank { "--:--" }} - ${entry.endTime.ifBlank { "--:--" }}",
+                                    modifier = Modifier.color(COLOR_OUTPUT_TEXT)
+                                        .fontSize(if (isMobile) 13.px else 15.px)
+                                )
                             }
-                            SpanText("Status: ${entry.status}", modifier = Modifier.color(COLOR_OUTPUT_TEXT).fontSize(if (isMobile) 13.px else 15.px))
+                            SpanText(
+                                "Status: ${entry.status}",
+                                modifier = Modifier.color(COLOR_OUTPUT_TEXT)
+                                    .fontSize(if (isMobile) 13.px else 15.px)
+                            )
                             if (entry.description.isNotBlank()) {
                                 SpanText(
                                     "Notes:",
-                                    modifier = Modifier.margin(top = 6.px).color(COLOR_OUTPUT_TEXT).fontWeight(FontWeight.SemiBold).fontSize(if (isMobile) 13.px else 15.px)
+                                    modifier = Modifier.margin(top = 6.px).color(COLOR_OUTPUT_TEXT)
+                                        .fontWeight(FontWeight.SemiBold)
+                                        .fontSize(if (isMobile) 13.px else 15.px)
                                 )
                                 SpanText(
                                     entry.description,
@@ -548,7 +684,6 @@ fun DailyWorkLogPage(ctx: PageContext) {
     }
 
 
-
     // Show Alert Dialog Message
     if (showMessageAlertDialog) {
         MessageAlertDialog(
@@ -558,11 +693,10 @@ fun DailyWorkLogPage(ctx: PageContext) {
         )
     }
 
-    if(showToast) {
-        Toast(toastMessage, isMobile,showToast) { showToast = false }
+    if (showToast) {
+        Toast(toastMessage, isMobile, showToast) { showToast = false }
     }
 }
-
 
 
 /**
@@ -603,12 +737,15 @@ fun DropdownInput(
         )
     ) {
         // Handle placeholder display correctly
-        val showPlaceholder = placeholder != null && (selectedItem.isEmpty() || !items.contains(selectedItem) || selectedItem == placeholder)
+        val showPlaceholder =
+            placeholder != null && (selectedItem.isEmpty() || !items.contains(selectedItem) || selectedItem == placeholder)
         if (showPlaceholder && placeholder != null) {
             Option(value = "", attrs = { selected(); disabled() }) { Text(placeholder) }
         }
         items.forEach { item ->
-            Option(value = item, attrs = { if (item == selectedItem && !showPlaceholder) selected() }) {
+            Option(
+                value = item,
+                attrs = { if (item == selectedItem && !showPlaceholder) selected() }) {
                 Text(item)
             }
         }
@@ -630,7 +767,10 @@ fun ResponsiveFormRow(
 
     if (isMobile) {
         Column(modifier = Modifier.fillMaxWidth().margin(bottom = 10.px)) {
-            SpanText(label, modifier = Modifier.margin(bottom = 5.px).color(colorLabelText).fontSize(14.px))
+            SpanText(
+                label,
+                modifier = Modifier.margin(bottom = 5.px).color(colorLabelText).fontSize(14.px)
+            )
             content(Modifier.fillMaxWidth(), true)
         }
     } else {
