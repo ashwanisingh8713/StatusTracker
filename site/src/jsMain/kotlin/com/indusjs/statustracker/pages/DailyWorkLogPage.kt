@@ -15,7 +15,6 @@ import com.indusjs.statustracker.AppStyles.COLOR_OUTPUT_TEXT
 import com.indusjs.statustracker.components.MessageAlertDialog
 import com.indusjs.statustracker.components.ShowOptionMenu
 import com.indusjs.statustracker.components.Toast
-import com.indusjs.statustracker.components.VerticalThreeDotMenu
 import com.indusjs.statustracker.model.ResourceUiState
 import com.indusjs.statustracker.utils.Redirection
 import com.indusjs.statustracker.utils.ValidationUtil
@@ -43,7 +42,6 @@ import com.varabyte.kobweb.silk.style.common.PlaceholderColor
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.attributes.disabled
 import org.jetbrains.compose.web.attributes.selected
@@ -327,80 +325,47 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     )
                 }
 
+                val timeErrorListener: (String) -> Unit = { errorMessage ->
+                    messageAlertDialog = errorMessage
+                    showMessageAlertDialog = true
+                }
+
+                val timeChangeListener:(Boolean, String, Int)-> Unit = {isStartTime, time, duration ->
+                    workLogEntryData = if(isStartTime) {
+                        println("Start timeChangeListener: $time")
+                        if(duration == -2 ) {
+                            workLogEntryData.copy(startTime = time)
+                        } else {
+                            workLogEntryData.copy(startTime = time, duration = if(duration < 0) 0 else duration)
+                        }
+                    } else {
+                        println("End timeChangeListener: $time")
+                        if(duration == -2 ) {
+                            workLogEntryData.copy(endTime = time)
+                        } else {
+                            workLogEntryData.copy(endTime = time, duration = if(duration < 0) 0 else duration)
+                        }
+                    }
+                }
+
+                // Time
                 if (isMobile) {
                     ResponsiveFormRow(
                         label = "Start Time:",
                         colorLabelText = COLOR_LABEL_TEXT
                     ) { mod, mobile ->
-                        Input(
-                            type = InputType.Time,
-                            value = workLogEntryData.startTime,
-                            onValueChange = { startTime ->
-                                if (workLogEntryData.endTime.isNotEmpty()) {
-                                    val pair = ValidationUtil.checkAndCalculateTimeDifference(
-                                        startTime = startTime,
-                                        endTime = workLogEntryData.endTime
-                                    )
-                                    if (pair.first) {
-                                        workLogEntryData =
-                                            workLogEntryData.copy(startTime = startTime, duration = pair.second)
-                                    } else {
-                                        messageAlertDialog =
-                                            "Start time cannot be after end time."
-                                        showMessageAlertDialog = true
-                                        workLogEntryData =
-                                            workLogEntryData.copy(startTime = "")
-                                    }
-                                } else {
-                                    workLogEntryData =
-                                        workLogEntryData.copy(startTime = startTime)
-                                }
-                            },
-                            modifier = mod
-                                .padding(8.px)
-                                .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
-                                .borderRadius(8.px)
-                                .fontSize(if (mobile) 14.px else 16.px)
-                                .backgroundColor(COLOR_INPUT_BACKGROUND)
-                                .color(COLOR_INPUT_TEXT)
-                        )
+                        TimeSelectionInput(isMobile= mobile, isStartTime = true, workLogEntryData= workLogEntryData, mod=mod,
+                            timeChangeListener=timeChangeListener, timeErrorListener=timeErrorListener)
                     }
                     ResponsiveFormRow(
                         label = "End Time:",
                         colorLabelText = COLOR_LABEL_TEXT
                     ) { mod, mobile ->
-                        Input(
-                            type = InputType.Time,
-                            value = workLogEntryData.endTime,
-                            onValueChange = { endTime ->
-                                if (workLogEntryData.startTime.isNotEmpty()) {
-                                    val pair = ValidationUtil.checkAndCalculateTimeDifference(
-                                        startTime = workLogEntryData.startTime,
-                                        endTime = endTime
-                                    )
-                                    if (pair.first) {
-                                        workLogEntryData =
-                                            workLogEntryData.copy(endTime = endTime, duration = pair.second)
-                                    } else {
-                                        messageAlertDialog =
-                                            "End time cannot be before start time."
-                                        showMessageAlertDialog = true
-                                        workLogEntryData = workLogEntryData.copy(endTime = "")
-                                    }
-                                } else {
-                                    workLogEntryData = workLogEntryData.copy(endTime = endTime)
-                                }
-                            },
-                            modifier = mod
-                                .padding(8.px)
-                                .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
-                                .borderRadius(8.px)
-                                .fontSize(if (mobile) 14.px else 16.px)
-                                .backgroundColor(COLOR_INPUT_BACKGROUND)
-                                .color(COLOR_INPUT_TEXT)
-                        )
+                        TimeSelectionInput(isMobile= mobile, isStartTime = false, workLogEntryData= workLogEntryData, mod=mod,
+                            timeChangeListener=timeChangeListener, timeErrorListener=timeErrorListener)
                     }
-                } else {
+                }
+                else {
                     ResponsiveFormRow(
                         label = "Time:",
                         colorLabelText = COLOR_LABEL_TEXT
@@ -410,76 +375,15 @@ fun DailyWorkLogPage(ctx: PageContext) {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(10.px)
                         ) {
-                            Input(
-                                type = InputType.Time,
-                                value = workLogEntryData.startTime,
-                                onValueChange = { startTime ->
-                                    if (workLogEntryData.endTime.isNotEmpty()) {
-                                        val pair = ValidationUtil.checkAndCalculateTimeDifference(
-                                            startTime = startTime,
-                                            endTime = workLogEntryData.endTime
-                                        )
-                                        if (pair.first) {
-                                            workLogEntryData =
-                                                workLogEntryData.copy(startTime = startTime, duration = pair.second)
-                                        } else {
-                                            messageAlertDialog =
-                                                "Start time cannot be after end time."
-                                            showMessageAlertDialog = true
-                                            workLogEntryData =
-                                                workLogEntryData.copy(startTime = "")
-                                        }
-                                    } else {
-                                        workLogEntryData =
-                                            workLogEntryData.copy(startTime = startTime)
-                                    }
-                                },
-                                placeholder = "Start",
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(8.px)
-                                    .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
-                                    .borderRadius(8.px)
-                                    .fontSize(16.px)
-                                    .backgroundColor(COLOR_INPUT_BACKGROUND)
-                                    .color(COLOR_INPUT_TEXT),
-                            )
-                            Input(
-                                type = InputType.Time,
-                                value = workLogEntryData.endTime,
-                                onValueChange = { endTime ->
-                                    if (workLogEntryData.startTime.isNotEmpty()) {
-                                        val pair = ValidationUtil.checkAndCalculateTimeDifference(
-                                            startTime = workLogEntryData.startTime,
-                                            endTime = endTime
-                                        )
-                                        if (pair.first) {
-                                            workLogEntryData =
-                                                workLogEntryData.copy(endTime = endTime, duration = pair.second)
-                                        } else {
-                                            messageAlertDialog =
-                                                "End time cannot be before start time."
-                                            showMessageAlertDialog = true
-                                            workLogEntryData = workLogEntryData.copy(endTime = "")
-                                        }
-                                    } else {
-                                        workLogEntryData = workLogEntryData.copy(endTime = endTime)
-                                    }
-                                },
-                                placeholder = "End",
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(8.px)
-                                    .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
-                                    .borderRadius(8.px)
-                                    .fontSize(16.px)
-                                    .backgroundColor(COLOR_INPUT_BACKGROUND)
-                                    .color(COLOR_INPUT_TEXT),
-                            )
+                            TimeSelectionInput(isMobile= false, isStartTime = true, workLogEntryData= workLogEntryData, mod=mod,
+                                timeChangeListener=timeChangeListener, timeErrorListener=timeErrorListener)
+                            TimeSelectionInput(isMobile= false, isStartTime = false, workLogEntryData= workLogEntryData, mod=mod,
+                                timeChangeListener=timeChangeListener, timeErrorListener=timeErrorListener)
                         }
                     }
                 }
 
+                // Duration
                 ResponsiveFormRow(
                     label = "Duration:",
                     colorLabelText = COLOR_LABEL_TEXT
@@ -501,6 +405,7 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     )
                 }
 
+                // Status
                 ResponsiveFormRow(label = "Status:", colorLabelText = COLOR_LABEL_TEXT) { mod, _ ->
                     DropdownInput(
                         selectedItem = workLogEntryData.status,
@@ -517,6 +422,7 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     )
                 }
 
+                // Description
                 ResponsiveFormRow(
                     label = "Description:",
                     colorLabelText = COLOR_LABEL_TEXT
@@ -543,12 +449,13 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     )
                 }
 
+
+                // Preview Button
                 Row {
                     Button(
                         onClick = {
                             if (workLogEntryData.isValid()) {
                                 workLogs.add(workLogEntryData)
-                                // TODO, make api request to log entry in Server
                             } else {
                                 println("Date and Task are required fields. Category and Status are recommended.")
 
@@ -564,8 +471,10 @@ fun DailyWorkLogPage(ctx: PageContext) {
                         Text("Preview")
                     }
 
+                    // Space
                     com.indusjs.statustracker.utils.Spacer(modifier = Modifier.width(40.px))
 
+                    // Add Entry Button, it sends API request to add a new entry
                     Button(
                         onClick = {
                             if (workLogEntryData.isValid()) {
@@ -789,5 +698,58 @@ fun ResponsiveFormRow(
             content(Modifier.flexGrow(1), false)
         }
     }
+}
+
+
+@Composable
+fun TimeSelectionInput(isMobile: Boolean, isStartTime: Boolean, workLogEntryData: WorkLogEntry, mod: Modifier, timeChangeListener:(Boolean, String, Int)->Unit,
+                       timeErrorListener:(String)->Unit) {
+
+    Input(
+        type = InputType.Time,
+        value = if(isStartTime) workLogEntryData.startTime else workLogEntryData.endTime,
+        onValueChange = { selectedTime ->
+            if(isStartTime) {
+                if (workLogEntryData.endTime.isNotEmpty()) {
+                    val pair = ValidationUtil.checkAndCalculateTimeDifference(
+                        startTime = selectedTime,
+                        endTime = workLogEntryData.endTime
+                    )
+                    if (pair.first) {
+                        timeChangeListener(isStartTime, selectedTime, pair.second)
+                    } else {
+                        timeErrorListener("Start time cannot be after end time.")
+                        timeChangeListener(isStartTime, "", pair.second)
+                    }
+                } else {
+                    println("Start time: $selectedTime")
+                    timeChangeListener(isStartTime, selectedTime, -2)
+                }
+            } else {
+                if (workLogEntryData.startTime.isNotEmpty()) {
+                    val pair = ValidationUtil.checkAndCalculateTimeDifference(
+                        startTime = workLogEntryData.startTime,
+                        endTime = selectedTime
+                    )
+                    if (pair.first) {
+                        timeChangeListener(isStartTime, selectedTime, pair.second)
+                    } else {
+                        timeErrorListener("End time cannot be before start time.")
+                        timeChangeListener(isStartTime, "", pair.second)
+                    }
+                } else {
+                    workLogEntryData.copy(endTime = selectedTime)
+                    timeChangeListener(isStartTime, selectedTime, -2)
+                }
+            }
+        },
+        modifier = mod
+            .padding(8.px)
+            .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
+            .borderRadius(8.px)
+            .fontSize(if (isMobile) 14.px else 16.px)
+            .backgroundColor(COLOR_INPUT_BACKGROUND)
+            .color(COLOR_INPUT_TEXT)
+    )
 }
 
