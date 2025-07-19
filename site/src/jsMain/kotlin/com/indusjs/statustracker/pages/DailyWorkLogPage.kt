@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.indusjs.data.auth.AuthManager
+import com.indusjs.statustracker.AppStyle.attr
 import com.indusjs.statustracker.AppStyles.COLOR_CONTAINER_BACKGROUND
 import com.indusjs.statustracker.AppStyles.COLOR_CONTAINER_SHADOW
 import com.indusjs.statustracker.AppStyles.COLOR_INNER_CONTAINER_SHADOW
@@ -19,6 +20,7 @@ import com.indusjs.statustracker.model.ResourceUiState
 import com.indusjs.statustracker.utils.Redirection
 import com.indusjs.statustracker.utils.ValidationUtil
 import com.indusjs.statustracker.viewmodel.WorkLogEntryViewModel
+import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontStyle
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -30,6 +32,7 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
@@ -53,6 +56,7 @@ import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.margin
 import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.position
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.*
 import org.koin.compose.getKoin
@@ -330,23 +334,30 @@ fun DailyWorkLogPage(ctx: PageContext) {
                     showMessageAlertDialog = true
                 }
 
-                val timeChangeListener:(Boolean, String, Int)-> Unit = {isStartTime, time, duration ->
-                    workLogEntryData = if(isStartTime) {
-                        println("Start timeChangeListener: $time")
-                        if(duration == -2 ) {
-                            workLogEntryData.copy(startTime = time)
+                val timeChangeListener: (Boolean, String, Int) -> Unit =
+                    { isStartTime, time, duration ->
+                        workLogEntryData = if (isStartTime) {
+                            println("Start timeChangeListener: $time")
+                            if (duration == -2) {
+                                workLogEntryData.copy(startTime = time)
+                            } else {
+                                workLogEntryData.copy(
+                                    startTime = time,
+                                    duration = if (duration < 0) 0 else duration
+                                )
+                            }
                         } else {
-                            workLogEntryData.copy(startTime = time, duration = if(duration < 0) 0 else duration)
-                        }
-                    } else {
-                        println("End timeChangeListener: $time")
-                        if(duration == -2 ) {
-                            workLogEntryData.copy(endTime = time)
-                        } else {
-                            workLogEntryData.copy(endTime = time, duration = if(duration < 0) 0 else duration)
+                            println("End timeChangeListener: $time")
+                            if (duration == -2) {
+                                workLogEntryData.copy(endTime = time)
+                            } else {
+                                workLogEntryData.copy(
+                                    endTime = time,
+                                    duration = if (duration < 0) 0 else duration
+                                )
+                            }
                         }
                     }
-                }
 
                 // Time
                 if (isMobile) {
@@ -354,18 +365,31 @@ fun DailyWorkLogPage(ctx: PageContext) {
                         label = "Start Time:",
                         colorLabelText = COLOR_LABEL_TEXT
                     ) { mod, mobile ->
-                        TimeSelectionInput(isMobile= mobile, isStartTime = true, workLogEntryData= workLogEntryData, mod=mod,
-                            timeChangeListener=timeChangeListener, timeErrorListener=timeErrorListener)
+                        TimeSelectionInput(
+                            isMobile = mobile,
+                            isStartTime = true,
+                            workLogEntryData = workLogEntryData,
+                            mod = mod,
+                            timeChangeListener = timeChangeListener,
+                            timeErrorListener = timeErrorListener,
+                            isAlertDialogShowing = showMessageAlertDialog
+                        )
                     }
                     ResponsiveFormRow(
                         label = "End Time:",
                         colorLabelText = COLOR_LABEL_TEXT
                     ) { mod, mobile ->
-                        TimeSelectionInput(isMobile= mobile, isStartTime = false, workLogEntryData= workLogEntryData, mod=mod,
-                            timeChangeListener=timeChangeListener, timeErrorListener=timeErrorListener)
+                        TimeSelectionInput(
+                            isMobile = mobile,
+                            isStartTime = false,
+                            workLogEntryData = workLogEntryData,
+                            mod = mod,
+                            timeChangeListener = timeChangeListener,
+                            timeErrorListener = timeErrorListener,
+                            isAlertDialogShowing = showMessageAlertDialog
+                        )
                     }
-                }
-                else {
+                } else {
                     ResponsiveFormRow(
                         label = "Time:",
                         colorLabelText = COLOR_LABEL_TEXT
@@ -375,10 +399,24 @@ fun DailyWorkLogPage(ctx: PageContext) {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(10.px)
                         ) {
-                            TimeSelectionInput(isMobile= false, isStartTime = true, workLogEntryData= workLogEntryData, mod=mod,
-                                timeChangeListener=timeChangeListener, timeErrorListener=timeErrorListener)
-                            TimeSelectionInput(isMobile= false, isStartTime = false, workLogEntryData= workLogEntryData, mod=mod,
-                                timeChangeListener=timeChangeListener, timeErrorListener=timeErrorListener)
+                            TimeSelectionInput(
+                                isMobile = false,
+                                isStartTime = true,
+                                workLogEntryData = workLogEntryData,
+                                mod = mod,
+                                timeChangeListener = timeChangeListener,
+                                timeErrorListener = timeErrorListener,
+                                isAlertDialogShowing = showMessageAlertDialog
+                            )
+                            TimeSelectionInput(
+                                isMobile = false,
+                                isStartTime = false,
+                                workLogEntryData = workLogEntryData,
+                                mod = mod,
+                                timeChangeListener = timeChangeListener,
+                                timeErrorListener = timeErrorListener,
+                                isAlertDialogShowing = showMessageAlertDialog
+                            )
                         }
                     }
                 }
@@ -390,7 +428,7 @@ fun DailyWorkLogPage(ctx: PageContext) {
                 ) { mod, mobile ->
                     Input(
                         type = InputType.Text,
-                        value = if(workLogEntryData.duration == 0) "" else "${workLogEntryData.duration} Mins",
+                        value = if (workLogEntryData.duration == 0) "" else "${workLogEntryData.duration} Mins",
                         enabled = false,
                         onValueChange = { duration ->
                             workLogEntryData = workLogEntryData.copy(duration = duration as Int)
@@ -702,15 +740,23 @@ fun ResponsiveFormRow(
 
 
 @Composable
-fun TimeSelectionInput(isMobile: Boolean, isStartTime: Boolean, workLogEntryData: WorkLogEntry, mod: Modifier, timeChangeListener:(Boolean, String, Int)->Unit,
-                       timeErrorListener:(String)->Unit) {
+fun TimeSelectionInput(
+    isMobile: Boolean, isStartTime: Boolean, workLogEntryData: WorkLogEntry,
+    mod: Modifier, timeChangeListener: (Boolean, String, Int) -> Unit,
+    timeErrorListener: (String) -> Unit,
+    isAlertDialogShowing: Boolean // New parameter
+) {
+
+    var isss by remember { mutableStateOf(false) }
 
     Input(
         type = InputType.Time,
-        value = if(isStartTime) workLogEntryData.startTime else workLogEntryData.endTime,
+        value = if (isStartTime) workLogEntryData.startTime else workLogEntryData.endTime,
+        readOnly = isss,
         onValueChange = { selectedTime ->
-            if(isStartTime) {
+            if (isStartTime) {
                 if (workLogEntryData.endTime.isNotEmpty()) {
+                    isss = true
                     val pair = ValidationUtil.checkAndCalculateTimeDifference(
                         startTime = selectedTime,
                         endTime = workLogEntryData.endTime
@@ -743,6 +789,7 @@ fun TimeSelectionInput(isMobile: Boolean, isStartTime: Boolean, workLogEntryData
                 }
             }
         },
+        enabled = !isAlertDialogShowing, // Disable when dialog is showing
         modifier = mod
             .padding(8.px)
             .border(1.px, LineStyle.Solid, COLOR_INPUT_BORDER)
@@ -750,6 +797,26 @@ fun TimeSelectionInput(isMobile: Boolean, isStartTime: Boolean, workLogEntryData
             .fontSize(if (isMobile) 14.px else 16.px)
             .backgroundColor(COLOR_INPUT_BACKGROUND)
             .color(COLOR_INPUT_TEXT)
+            .onFocusIn { isss = false }
+            .cursor(Cursor.Pointer)
+            .styleModifier {
+                // Ensure the input itself has a relative position for absolute positioning of its children
+                position(Position.Relative)
+
+                // Target the native calendar picker indicator for WebKit browsers
+                // Make it cover the entire input area to be clickable
+                property("-webkit-appearance", "none") // To allow styling of the indicator
+                property("::-webkit-calendar-picker-indicator",
+                    "display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; cursor: pointer; opacity: 0;")
+                // For other browsers, you might need similar specific pseudo-elements or alternative solutions.
+            }
+            .attr("onfocus", "this.showPicker()")
+            /*.attrs(
+                finalHandler = {
+                    // Add onfocus to explicitly show the picker when the input gains focus (on click)
+                    attr("onfocus", "this.showPicker()")
+                }
+            )*/
     )
 }
 

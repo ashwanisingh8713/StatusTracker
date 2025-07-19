@@ -3,6 +3,7 @@ package com.indusjs.statustracker.components
 import androidx.compose.runtime.Composable
 import androidx.compose.web.events.SyntheticMouseEvent
 import com.indusjs.statustracker.AppStyles
+import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
