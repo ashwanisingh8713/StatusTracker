@@ -799,7 +799,7 @@ fun TimeSelectionInput(
             .color(COLOR_INPUT_TEXT)
             .onFocusIn { isss = false }
             .cursor(Cursor.Pointer)
-            .styleModifier {
+            .styleModifier {// This is required to Full Area Click
                 // Ensure the input itself has a relative position for absolute positioning of its children
                 position(Position.Relative)
 
@@ -810,13 +810,9 @@ fun TimeSelectionInput(
                     "display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; cursor: pointer; opacity: 0;")
                 // For other browsers, you might need similar specific pseudo-elements or alternative solutions.
             }
+            // This is required to Full Area Click
+            // This is required to Hide when AlertDialog is shown
             .attr("onfocus", "this.showPicker()")
-            /*.attrs(
-                finalHandler = {
-                    // Add onfocus to explicitly show the picker when the input gains focus (on click)
-                    attr("onfocus", "this.showPicker()")
-                }
-            )*/
     )
 }
 
