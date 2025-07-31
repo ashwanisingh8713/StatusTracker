@@ -254,7 +254,7 @@ fun LoginSection(ctx: PageContext, onForgotPasswordClick: () -> Unit, showToast:
                 }
                 onClick {
                     it.preventDefault() // Prevents the browser from navigating away
-                    onForgotPasswordClick() // Call the lambda to show the dialog
+                    ctx.router.navigateTo(Redirection.SIGN_UP) // Navigate to a protected page
                 }
             }) {
                 Text("Sign Up")
