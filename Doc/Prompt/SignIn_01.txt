@@ -1,0 +1,33 @@
+
+I am developing a web application using Kobweb `com.github.stevdza-san:KotlinBootstrap`.
+GitHub Link `https://github.com/stevdza-san/KotlinBootstrap` you first refer before generating the code.
+Generate a Compose SignIn screen in Compose.
+This file package name is `com.indusjs.statustracker.pages`
+File name should be "BT_SignInPage.kt"
+It must respect the overall positioning and size of components.
+This screen must have compatibility of Mobile & Desktop Browser. For reference you can use "val breakpoint = rememberBreakpoint()".
+SignIn screen should have followings.
+- Company Logo
+- Title `Sign In`.
+- Email Input Text with label `Email` and basic Email validation.
+- Password Input Text with label `Password` and basic Password validation.
+- Sign In Button.
+
+Design the Sign In screen using KotlinBootstrap to ensure it looks elegant and responsive on both desktop and mobile.
+Incorporate enhancements like a structured card layout, consistent spacing, optional fields (like full name), and clear feedback styles that align with good UI/UX practices.
+
+Implementation notes:
+- On Click of "Sign In" button it should show `Progress Loader` UI and "Sign Up" button should be disabled util the API call is completed.
+
+
+- To enhance the user experience on the sign-in page, you can add the following features:
+- Social Media Login Options: Include buttons for Google, Facebook, or other social media logins for convenience.
+- Password Visibility Toggle: Add an icon to toggle password visibility.
+- Remember Me Checkbox: Allow users to stay signed in.
+- Forgot Password Link: Provide a link to reset the password.
+- Loading Indicators: Show a spinner or progress bar during sign-in.
+- Error Notifications: Use toast or alert components for better error visibility.
+- Responsive Design: Ensure the page adapts well to different screen sizes.
+- Accessibility Features: Add ARIA attributes and keyboard navigation support.
+- Animations: Use subtle animations for button clicks or input focus.
+- Dark Mode Support: Allow users to switch between light and dark themes.
