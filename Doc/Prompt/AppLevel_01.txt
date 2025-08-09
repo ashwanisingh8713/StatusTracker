@@ -1,0 +1,5 @@
+Take these into account:
+- My company logo is defined with resource id `com.indusjs.statustracker.R.drawable.logo`
+- My application package is `com.indusjs.statustracker`
+- At the top of every file add a small comment saying "Author: Ashwani, Date: DD-MM-YYYY, Summary- Manoj Productions".
+- The name of my company is "Product of Bharat."

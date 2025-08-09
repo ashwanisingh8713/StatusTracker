@@ -1,0 +1,21 @@
+
+I am developing a web application using Kobweb `com.github.stevdza-san:KotlinBootstrap`.
+GitHub Link `https://github.com/stevdza-san/KotlinBootstrap` you first refer before generating the code.
+Generate a Compose SignUP screen in Compose.
+This file package name is `com.indusjs.statustracker.pages`
+File name should be "BT_SignUpPage.kt"
+It must respect the overall positioning and size of components.
+This screen must have compatibility of Mobile & Desktop Browser. For reference you can use "val breakpoint = rememberBreakpoint()".
+SignUp screen should have followings.
+- Company Logo
+- Title `Sign Up`.
+- Email Input Text with label `Email` and basic Email validation.
+- Password Input Text with label `Password` and basic Password validation.
+- Confirm Password Input Text with label `Confirm Password` and basic Password validation.
+- Sign Up Button.
+
+Design the Sign Up screen using KotlinBootstrap to ensure it looks elegant and responsive on both desktop and mobile.
+Incorporate enhancements like a structured card layout, consistent spacing, optional fields (like full name), and clear feedback styles that align with good UI/UX practices.
+
+Implementation notes:
+- On Click of "Sign Up" button it should show `Progress Loader` UI and "Sign Up" button should be disabled util the API call is completed.
