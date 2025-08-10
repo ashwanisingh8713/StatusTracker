@@ -6,16 +6,13 @@ import com.indusjs.domain.usecase.worklog.WorkLogEntryUseCase
 import com.ours.statustracker.model.ResourceUiState
 import com.ours.statustracker.model.WorkLogEntryState
 import com.ours.statustracker.pages.WorkLogEntry
-import com.ours.statustracker.utils.ValidationUtil
-import com.ours.statustracker.utils.ValidationUtil.Companion.formatt
+import com.utils.ValidationUtil
+import com.utils.ValidationUtil.Companion.formatt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.format
-import kotlinx.datetime.format.DateTimeFormat
 
 class WorkLogEntryViewModel(private val workLogUseCase: WorkLogEntryUseCase, private val coroutineScope: CoroutineScope) {
 

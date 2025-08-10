@@ -16,8 +16,8 @@ import com.ours.statustracker.components.MessageAlertDialog
 import com.ours.statustracker.components.ShowOptionMenu
 import com.ours.statustracker.components.Toast
 import com.ours.statustracker.model.ResourceUiState
-import com.ours.statustracker.utils.Redirection
-import com.ours.statustracker.utils.ValidationUtil
+import com.utils.Redirection
+import com.utils.ValidationUtil
 import com.ours.statustracker.viewmodel.WorkLogEntryViewModel
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontStyle

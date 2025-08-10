@@ -3,6 +3,9 @@ package com.ours.statustracker.pages
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.ours.statustracker.components.layouts.PageLayoutData
+import com.utils.setDescription
+import com.utils.setPageMetadata
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -16,6 +19,9 @@ import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.core.Page
+import com.varabyte.kobweb.core.data.add
+import com.varabyte.kobweb.core.init.InitRoute
+import com.varabyte.kobweb.core.init.InitRouteContext
 import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.forms.Checkbox
 import com.varabyte.kobweb.silk.components.forms.Input
@@ -25,6 +31,7 @@ import com.varabyte.kobweb.silk.components.icons.fa.FaGoogle
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
+import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.attributes.InputType
@@ -32,10 +39,27 @@ import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.rgba
+import org.w3c.dom.Document
+
+@InitRoute
+fun initHomePage(ctx: InitRouteContext) {
+    ctx.data.add(PageLayoutData("Home Page"))
+}
+
+
 
 @Page("/bt-signin")
 @Composable
 fun BTSignInPage() {
+    val title = "Sign In"
+    val description = "It is SignIn Page"
+
+    // Get title and description out of ctx.data
+    LaunchedEffect(title, description) {
+        document.setPageMetadata(title, description)
+        document.setDescription(description)
+    }
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var emailError by remember { mutableStateOf<String?>(null) }

@@ -1,4 +1,4 @@
-package com.ours.statustracker.utils
+package com.utils
 
 import org.jetbrains.compose.web.css.*
 

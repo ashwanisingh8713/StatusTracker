@@ -45,11 +45,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.Composable
 import com.ours.statustracker.model.ResourceUiState
-import com.ours.statustracker.utils.Redirection
-import com.ours.statustracker.utils.ValidationUtil.Companion.validateEmail
-import com.ours.statustracker.utils.ValidationUtil.Companion.validatePassword
+import com.utils.Redirection
+import com.utils.ValidationUtil.Companion.validateEmail
+import com.utils.ValidationUtil.Companion.validatePassword
 import com.ours.statustracker.viewmodel.SignInViewModule
-import com.varabyte.kobweb.compose.foundation.layout.Spacer
 
 
 @Composable

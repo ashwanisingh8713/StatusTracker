@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import com.indusjs.data.auth.AuthManager
 import com.ours.statustracker.AppStyles
 import com.ours.statustracker.AppStyles.COLOR_LABEL_TEXT
-import com.ours.statustracker.utils.Redirection
+import com.utils.Redirection
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.foundation.layout.Column

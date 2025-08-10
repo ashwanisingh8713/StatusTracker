@@ -1,4 +1,4 @@
-package com.ours.statustracker.utils
+package com.utils
 
 object Redirection {
     const val LOGIN = "/login"

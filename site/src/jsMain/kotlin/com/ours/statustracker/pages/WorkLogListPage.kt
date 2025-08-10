@@ -12,7 +12,7 @@ import com.indusjs.domain.model.WorkLogResponse
 import com.ours.statustracker.AppStyles
 import com.ours.statustracker.components.ShowOptionMenu
 import com.ours.statustracker.model.ResourceUiState
-import com.ours.statustracker.utils.Redirection
+import com.utils.Redirection
 import com.ours.statustracker.viewmodel.WorkLogListViewModel
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.core.Page
@@ -23,22 +23,17 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.PageContext
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.web.css.AlignItems
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.div
 import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Text
 import org.koin.compose.getKoin
 
 
