@@ -1,0 +1,15 @@
+I am developing a web application using Kobweb `com.github.stevdza-san:KotlinBootstrap`.
+You first refer @README.md file before generating the code.
+Generate a Compose Screen for "Daily Learning Log Entry" in Compose. File package name is `com.indusjs.statustracker.pages`.
+File name should be "DailyLearningLogEntryPage.kt".
+It must respect the overall positioning and size of components.
+This screen must have compatibility of Mobile & Desktop Browser. For reference you can use "val breakpoint = rememberBreakpoint()".
+Daily Learning Log Entry screen should have the following:
+- I want to track Daily Subject Learning UI, so make it according to that.
+- Company Logo
+- Title `Daily Learning Log Entry`.
+- Start & End Date Time Input Text with label `Date` & `Time` with basic Date & Time validation.
+- Start Date & Time should be before End Date & Time.
+- Learning Log Input Text with label `Learning Log` and basic validation.
+- Learning Log Type Dropdown with label `Learning Log Type` and basic validation.
+- Submit Button.
