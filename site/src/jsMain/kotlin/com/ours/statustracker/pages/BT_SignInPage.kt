@@ -9,13 +9,13 @@ import com.utils.setPageMetadata
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.functions.CSSFilter
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.core.Page
@@ -35,6 +35,7 @@ import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.attributes.InputType
+import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.percent
@@ -115,9 +116,9 @@ fun BTSignInPage() {
         }
     }
 
-    val backgroundColor = if (darkMode) Color.rgb(24, 26, 27) else Colors.White
-    val cardColor = if (darkMode) Color.rgb(36, 37, 38) else Colors.White
-    val textColor = if (darkMode) Colors.White else Color.rgb(51, 51, 51)
+    val backgroundColor = if (darkMode) Color("rgb(24, 26, 27)") else Colors.White
+    val cardColor = if (darkMode) Color("rgb(36, 37, 38)") else Colors.White
+    val textColor = if (darkMode) Colors.White else Color("rgb(51, 51, 51)")
 
     Box(
         modifier = Modifier.fillMaxSize().backgroundColor(backgroundColor).padding(16.px),
@@ -130,25 +131,56 @@ fun BTSignInPage() {
                 .backgroundColor(cardColor)
                 .borderRadius(8.px)
                 .boxShadow(0.px, 0.px, 10.px, 0.px, rgba(0, 0, 0, 0.1))
-                .onKeyDown { event ->
-                    if (event.key == "Enter" && !isLoading) {
+                .onKeyDown {
+                    if (it.key == "Enter" && !isLoading) {
                         scope.launch { handleSignIn() }
                     }
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.px)
         ) {
+            // Creative, high-selling header section
+            Box(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(bottom = 24.px)
+                    .background(
+                        color = if (darkMode) Color("rgba(0,0,0,0.15)") else Color("rgba(255,255,255,0.15)")
+                    )
+//                    .backdropFilter(CSSFilter.blur(10.0))
+//                    .borderRadius(16.px)
+//                    .boxShadow(0.px, 8.px, 32.px, 0.px, rgba(0,0,0,0.10)),
+//                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    modifier = Modifier.padding(32.px),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        src = "/logo.png",
+                        description = "StatusTracker Logo",
+                        modifier = Modifier.size(96.px).margin(bottom = 12.px)
+                    )
+                    SpanText(
+                        "Welcome Back!",
+                        modifier = Modifier.fontSize(32.px).fontWeight(FontWeight.Bold).color(Color("#1a237e")).textAlign(TextAlign.Center)
+                    )
+                    SpanText(
+                        "Track your work, boost your productivity, and never miss a beat.",
+                        modifier = Modifier.fontSize(18.px).color(Color("#3949ab")).margin(top = 8.px).textAlign(TextAlign.Center)
+                    )
+                    SpanText(
+                        "Sign in to unlock your personalized dashboard and get started!",
+                        modifier = Modifier.fontSize(15.px).color(Color("#5c6bc0")).margin(top = 4.px).textAlign(TextAlign.Center)
+                    )
+                }
+            }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 Button(onClick = { darkMode = !darkMode }, modifier = Modifier) {
                     SpanText(if (darkMode) "☀️" else "🌙", modifier = Modifier.margin(right = 4.px))
                     SpanText(if (darkMode) "Light" else "Dark")
                 }
             }
-            Image(
-                src = "/logo.png",
-                description = "Company Logo",
-                modifier = Modifier.size(80.px).margin(bottom = 16.px)
-            )
+
             SpanText(
                 "Sign In",
                 modifier = Modifier.fontSize(28.px).fontWeight(FontWeight.Bold).textAlign(TextAlign.Center).color(textColor)
