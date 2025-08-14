@@ -12,4 +12,11 @@ Daily Learning Log Entry screen should have the following:
 - Start Date & Time should be before End Date & Time.
 - Learning Log Input Text with label `Learning Log` and basic validation.
 - Learning Log Type Dropdown with label `Learning Log Type` and basic validation.
-- Submit Button.
+
+Additionally new screen includes:
+A responsive layout that adapts to mobile and desktop screen sizes.
+Your company logo at the top.
+A title: "Daily Learning Log Entry".
+Native date and time pickers for "Start" and "End" times, with validation to ensure the start is before the end.
+All the required input fields: Learning Log, Log Type, Subject Name, Topic Covered, Resources Used, Difficulty Level, Time Spent.
+A "Submit" button that is only enabled when all required fields are valid.
