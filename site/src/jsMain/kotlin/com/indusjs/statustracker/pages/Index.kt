@@ -27,6 +27,7 @@ import com.indusjs.statustracker.components.LoginSection
 import com.indusjs.statustracker.components.MarketingSection
 import com.indusjs.statustracker.utils.Redirection
 import com.indusjs.statustracker.utils.rememberWindowWidth
+import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.core.PageContext
 import com.varabyte.kobweb.core.rememberPageContext
@@ -35,6 +36,14 @@ import org.jetbrains.compose.web.css.*
 // MAKE SURE THESE TWO IMPORTS ARE PRESENT:
 import com.varabyte.kobweb.compose.foundation.layout.Column as KobwebColumn
 import com.varabyte.kobweb.compose.foundation.layout.Row as KobwebRow
+
+import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.foundation.layout.Column
+import org.jetbrains.compose.web.dom.H1
+import org.jetbrains.compose.web.dom.P
+import org.jetbrains.compose.web.dom.Text
+import com.varabyte.kobweb.silk.components.forms.Button
+import com.varabyte.kobweb.compose.foundation.layout.Spacer
 
 
 // Container that has a tagline and grid on desktop, and just the tagline on mobile
@@ -75,22 +84,17 @@ fun initHomePage(ctx: InitRouteContext) {
     ctx.data.add(PageLayoutData("Home"))
 }
 
-
-
 @Page
-@Layout(".components.layouts.PageLayout")
 @Composable
 fun HomePage(ctx: PageContext) {
     if (AuthManager.isSignedIn()) {
         println("User is signed in")
         ctx.router.navigateTo(Redirection.DAILY_WORK_LOG)
     } else {
-        ctx.router.navigateTo(Redirection.LOGIN) // Navigate to a protected page
+        ctx.router.navigateTo(Redirection.WELCOME) // Navigate to a protected page
         println("User is not signed in")
     }
 }
-
-
 
 /*@Composable
 fun LoginPage() {

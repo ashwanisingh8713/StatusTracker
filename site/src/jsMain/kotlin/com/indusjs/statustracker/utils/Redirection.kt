@@ -6,5 +6,9 @@ object Redirection {
     const val DAILY_WORK_LOG = "/dailyworklog"
     const val SIGN_UP = "/signup"
 
+    const val WELCOME = "/welcome"
+
+    const val VOCABULARY = "/vocabulary"
+
 
 }
