@@ -17,6 +17,7 @@ import com.varabyte.kobweb.silk.components.forms.Input
 import com.varabyte.kobweb.silk.components.forms.*
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.cssRem
+import org.jetbrains.compose.web.dom.A
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.H1
 import org.jetbrains.compose.web.dom.P
@@ -52,10 +53,26 @@ fun VocabularyPage(ctx: PageContext) {
         }
     }) {
         Column(modifier = VocabularyPageStyle) {
+            A(
+                href = "/",
+                attrs = {
+                    style {
+                        property("margin-bottom", "0.5rem")
+                        property("cursor", "pointer")
+                        property("font-size", "1.5rem")
+                        property("display", "inline-block")
+                    }
+                }
+            ) {
+                Text("🏠")
+            }
             H1 { Text("Vocabulary List") }
 
             Div(attrs = {
                 style {
+                    property("display", "flex")
+                    property("justify-content", "center")
+                    property("align-items", "center")
                     property("margin-bottom", "1rem")
                     property("width", "100%")
                 }
@@ -68,14 +85,46 @@ fun VocabularyPage(ctx: PageContext) {
                 )
             }
 
-            Div(attrs = {
+            // Table to display vocabulary items
+            org.jetbrains.compose.web.dom.Table(attrs = {
                 style {
-                    property("height", "100rem")
+                    property("width", "100%")
+                    property("border-collapse", "collapse")
+                    property("margin-top", "1rem")
                 }
-            })
-
-            for ((word, meaning) in filteredList) {
-                VocabularyItem(word = word, meaning = meaning)
+            }) {
+                org.jetbrains.compose.web.dom.Tr {
+                    org.jetbrains.compose.web.dom.Th(attrs = {
+                        style {
+                            property("border", "1px solid #ccc")
+                            property("padding", "0.5rem")
+                            property("background-color", "#0000f0")
+                        }
+                    }) { Text("Word") }
+                    org.jetbrains.compose.web.dom.Th(attrs = {
+                        style {
+                            property("border", "1px solid #ccc")
+                            property("padding", "0.5rem")
+                            property("background-color", "#0000f0")
+                        }
+                    }) { Text("Meaning") }
+                }
+                for ((word, meaning) in filteredList) {
+                    org.jetbrains.compose.web.dom.Tr {
+                        org.jetbrains.compose.web.dom.Td(attrs = {
+                            style {
+                                property("border", "1px solid #ccc")
+                                property("padding", "0.5rem")
+                            }
+                        }) { Text(word) }
+                        org.jetbrains.compose.web.dom.Td(attrs = {
+                            style {
+                                property("border", "1px solid #ccc")
+                                property("padding", "0.5rem")
+                            }
+                        }) { Text(meaning) }
+                    }
+                }
             }
         }
     }
