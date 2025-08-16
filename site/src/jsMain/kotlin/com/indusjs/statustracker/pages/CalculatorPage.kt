@@ -1,26 +1,53 @@
 package com.indusjs.statustracker.pages
 
+//import androidx.compose.foundation.layout.fillMaxWidth
+//import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.foundation.layout.Box
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+//import androidx.health.connect.client.units.percent
+import com.indusjs.statustracker.utils.TextAlign
+import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
+import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.core.Page
-import com.varabyte.kobweb.silk.components.text.SpanText
-import org.jetbrains.compose.web.css.fontSize
-import org.jetbrains.compose.web.css.px
+import com.varabyte.kobweb.core.PageContext
+import com.varabyte.kobweb.silk.components.forms.Button
+import com.varabyte.kobweb.silk.components.icons.fa.FaMoon
+import com.varabyte.kobweb.silk.components.icons.fa.FaSun
+import com.varabyte.kobweb.silk.components.navigation.Link
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.dom.*
 
-
-@Page(routeOverride = "calculator")
+@Page
 @Composable
-fun HelloPage() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+fun HomePage() {
+    Column(
+        Modifier
+            .fillMaxWidth().whiteSpace(WhiteSpace.PreWrap).textAlign(TextAlign.Center),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SpanText(
-            text = "Hello!",
-           // modifier = Modifier.fontSize(csrem.2) // Make the text a bit larger
-        )
+        var colorMode by ColorMode.currentState
+        Button(
+            onClick = { colorMode = colorMode.opposite },
+            Modifier.borderRadius(50.percent).padding(0.px).align(Alignment.End)
+        ) {
+            // Includes support for Font Awesome icons
+            if (colorMode.isLight) FaMoon() else FaSun()
+        }
+        H1 {
+            Text("Welcome to Kobweb!")
+        }
+        Span {
+            Text("Create rich, dynamic web apps with ease, leveraging ")
+            Link("https://kotlinlang.org/", "Kotlin")
+            Text(" and ")
+            Link(
+                "https://github.com/JetBrains/compose-multiplatform/#compose-html",
+                "Compose HTML"
+            )
+        }
     }
 }

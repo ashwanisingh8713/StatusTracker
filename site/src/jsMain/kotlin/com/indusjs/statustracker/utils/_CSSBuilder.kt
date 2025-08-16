@@ -147,7 +147,7 @@ interface Overflow : StylePropertyEnum {
 fun Overflow(value: String) = value.unsafeCast<Overflow>()
 fun StyleScope.overflow(value: Overflow) = property("overflow", value)
 
-interface TextAlign : StylePropertyEnum {
+interface TextAlign : StylePropertyEnum, com.varabyte.kobweb.compose.css.TextAlign {
 	companion object {
 		inline val Left get() = TextAlign("left")
 		inline val Right get() = TextAlign("right")
