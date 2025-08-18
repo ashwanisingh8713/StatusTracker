@@ -26,7 +26,7 @@ import org.jetbrains.compose.web.dom.*
 fun HomePage() {
     Column(
         Modifier
-            .fillMaxWidth().whiteSpace(WhiteSpace.PreWrap).textAlign(TextAlign.Center),
+            .fillMaxWidth().textAlign(TextAlign.Center),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var colorMode by ColorMode.currentState
