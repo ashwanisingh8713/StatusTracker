@@ -1,7 +1,7 @@
 [versions]
-jetbrains-compose = "1.8.0"
-kobweb = "0.22.0"
-kotlin = "2.1.21"
+jetbrains-compose = "1.4.1"
+kobweb = "0.13.7"
+kotlin = "1.8.20"
 kotlinx-datetime = "0.6.0"
 
 kotlinx-coroutines = "1.10.1"
