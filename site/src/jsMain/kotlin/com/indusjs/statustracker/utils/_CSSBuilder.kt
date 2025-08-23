@@ -1,10 +1,20 @@
 package com.indusjs.statustracker.utils
 
 import com.indusjs.statustracker.AppStyle.selector
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.CSSBorder
+import org.jetbrains.compose.web.css.CSSBuilder
+import org.jetbrains.compose.web.css.CSSColorValue
+import org.jetbrains.compose.web.css.CSSNumeric
+import org.jetbrains.compose.web.css.CSSStyleRuleBuilder
+import org.jetbrains.compose.web.css.SelectorsScope
+import org.jetbrains.compose.web.css.StylePropertyEnum
+import org.jetbrains.compose.web.css.StyleScope
+import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.keywords.CSSAutoKeyword
+import org.jetbrains.compose.web.css.number
 import org.jetbrains.compose.web.css.selectors.CSSSelector
 import org.jetbrains.compose.web.css.selectors.Nth
+import org.jetbrains.compose.web.css.width
 
 fun CSSBuilder.list(vararg selectors: String) = group(*(selectors.map { desc(self, it) }.toTypedArray()))
 fun CSSBuilder.list(vararg selectors: CSSSelector) = group(*(selectors.map { desc(self, it) }.toTypedArray()))
@@ -147,7 +157,7 @@ interface Overflow : StylePropertyEnum {
 fun Overflow(value: String) = value.unsafeCast<Overflow>()
 fun StyleScope.overflow(value: Overflow) = property("overflow", value)
 
-interface TextAlign : StylePropertyEnum, com.varabyte.kobweb.compose.css.TextAlign {
+interface TextAlign : StylePropertyEnum {
 	companion object {
 		inline val Left get() = TextAlign("left")
 		inline val Right get() = TextAlign("right")
