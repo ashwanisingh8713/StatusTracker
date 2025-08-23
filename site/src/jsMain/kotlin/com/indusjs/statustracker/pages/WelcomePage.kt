@@ -74,7 +74,7 @@ fun WelcomePage(ctx: PageContext) {
                 Spacer(Modifier.height(16.px))
 
                 Button(
-                    onClick = { ctx.router.navigateTo("calculator") },
+                    onClick = { ctx.router.navigateTo("nilesh_calculator_page") },
                     modifier = Modifier
                         .border(1.px, LineStyle.Solid, Colors.White)
                         .color(Colors.White)
