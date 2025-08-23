@@ -89,10 +89,12 @@ fun initHomePage(ctx: InitRouteContext) {
 fun HomePage(ctx: PageContext) {
     if (AuthManager.isSignedIn()) {
         println("User is signed in")
-        ctx.router.navigateTo(Redirection.DAILY_WORK_LOG)
+        // Navigate to Vijay Welcome page
+        ctx.router.navigateTo("/VijayWelcome")
     } else {
-        ctx.router.navigateTo(Redirection.WELCOME) // Navigate to a protected page
         println("User is not signed in")
+        // Navigate to Welcome page
+        ctx.router.navigateTo("/VijayWelcome")
     }
 }
 
