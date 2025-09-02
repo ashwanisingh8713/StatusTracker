@@ -1,6 +1,7 @@
 package com.indusjs.statustracker.pages
 
 import androidx.compose.runtime.Composable
+import com.indusjs.statustracker.utils.Redirection
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.foundation.layout.*
 import com.varabyte.kobweb.compose.ui.*
@@ -65,7 +66,9 @@ fun ProfilePage(ctx: PageContext) {
                 Button(onClick = { println("Edit Profile") }) {
                     SpanText("Edit")
                 }
-                Button(onClick = { ctx.router.navigateTo("/logout") }) {
+                Button(onClick = {
+                            ctx.router.navigateTo(Redirection.WELCOME)
+                            }) {
                     SpanText("Logout")
                 }
             }

@@ -13,6 +13,7 @@ import com.indusjs.statustracker.utils.Redirection
 import com.indusjs.statustracker.utils.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.silk.components.forms.Button
+import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.cssRem
@@ -83,6 +84,12 @@ fun WelcomePage(ctx: PageContext) {
                         .borderRadius(0.5.cssRem)
                 ) {
                     Text("Vocabulary")
+                }
+
+                Button(onClick = {
+                    ctx.router.navigateTo(Redirection.PROFILE)
+                }) {
+                    SpanText("Profile")
                 }
             }
         }
