@@ -10,7 +10,7 @@ object Redirection {
 
     const val VOCABULARY = "/vocabulary"
 
-    const val PROFILE = "/frontpage"
+    const val PROFILE = "/welcomback"
 
 
 }

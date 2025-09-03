@@ -89,49 +89,12 @@ fun initHomePage(ctx: InitRouteContext) {
 fun HomePage(ctx: PageContext) {
     if (AuthManager.isSignedIn()) {
         println("User is signed in")
-        ctx.router.navigateTo(Redirection.DAILY_WORK_LOG)
+        ctx.router.navigateTo("/WelcomBack") // direct string
     } else {
-        ctx.router.navigateTo(Redirection.WELCOME) // Navigate to a protected page
+        ctx.router.navigateTo("/WelcomBack") // direct string
         println("User is not signed in")
     }
 }
-
-/*@Composable
-fun LoginPage() {
-    val windowWidth by rememberWindowWidth()
-    val DESKTOP_BREAKPOINT = 768 // Pixels
-
-    val isDesktop = windowWidth >= DESKTOP_BREAKPOINT
-
-    Box(
-        modifier = Modifier.fillMaxSize()
-            .backgroundColor(Colors.White) // Background color for the entire page
-    ) {
-        if (isDesktop) {
-            // Desktop view: Show both Login and Marketing sections side-by-side
-            Row(modifier = Modifier.fillMaxSize()) {
-                Box(
-                    modifier = Modifier.flexGrow(1) // Takes up half the available width
-                        .backgroundColor(Colors.White),
-                    contentAlignment = Alignment.Center // <<< --- CRUCIAL CHANGE: Center LoginSection within this Box
-                ) {
-                    LoginSection()
-                }
-                Box(modifier = Modifier.flexGrow(1).backgroundColor(Color("#ff0000"))) {
-                    MarketingSection()
-                }
-            }
-        } else {
-            // Mobile view: Only show the Login section
-            Box(
-                modifier = Modifier.fillMaxSize(), // Fill the entire page
-                contentAlignment = Alignment.Center // <<< --- CRUCIAL CHANGE: Center LoginSection for mobile
-            ) {
-                LoginSection()
-            }
-        }
-    }
-}*/
 
 
 
