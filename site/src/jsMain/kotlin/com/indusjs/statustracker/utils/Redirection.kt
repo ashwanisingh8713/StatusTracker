@@ -11,6 +11,6 @@ object Redirection {
     const val VOCABULARY = "/vocabulary"
 
     const val PROFILE = "/profile"
-
+    const val COURSE_MANAGEMENT_DOCS = "/coursemanagementdocs"
 
 }
