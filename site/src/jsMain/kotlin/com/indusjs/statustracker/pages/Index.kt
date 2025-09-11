@@ -26,24 +26,8 @@ import com.indusjs.statustracker.components.layouts.PageLayoutData
 import com.indusjs.statustracker.components.LoginSection
 import com.indusjs.statustracker.components.MarketingSection
 import com.indusjs.statustracker.utils.Redirection
-import com.indusjs.statustracker.utils.rememberWindowWidth
-import com.varabyte.kobweb.compose.foundation.layout.Arrangement
-import com.varabyte.kobweb.compose.ui.Alignment
-import com.varabyte.kobweb.core.PageContext
-import com.varabyte.kobweb.core.rememberPageContext
-import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
-import org.jetbrains.compose.web.css.*
-// MAKE SURE THESE TWO IMPORTS ARE PRESENT:
-import com.varabyte.kobweb.compose.foundation.layout.Column as KobwebColumn
-import com.varabyte.kobweb.compose.foundation.layout.Row as KobwebRow
 
-import com.varabyte.kobweb.compose.foundation.layout.Row
-import com.varabyte.kobweb.compose.foundation.layout.Column
-import org.jetbrains.compose.web.dom.H1
-import org.jetbrains.compose.web.dom.P
-import org.jetbrains.compose.web.dom.Text
-import com.varabyte.kobweb.silk.components.forms.Button
-import com.varabyte.kobweb.compose.foundation.layout.Spacer
+import com.varabyte.kobweb.core.PageContext
 
 
 // Container that has a tagline and grid on desktop, and just the tagline on mobile
