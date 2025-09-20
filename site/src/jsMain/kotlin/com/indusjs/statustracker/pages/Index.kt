@@ -1,20 +1,16 @@
 package com.indusjs.statustracker.pages
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import com.indusjs.data.auth.AuthManager
 import com.varabyte.kobweb.compose.css.StyleVariable
-import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.data.add
 import com.varabyte.kobweb.core.init.InitRoute
 import com.varabyte.kobweb.core.init.InitRouteContext
-import com.varabyte.kobweb.core.layout.Layout
 import com.varabyte.kobweb.silk.style.CssStyle
 import com.varabyte.kobweb.silk.style.base
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
@@ -23,8 +19,6 @@ import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.vh
 import org.jetbrains.compose.web.dom.Div
 import com.indusjs.statustracker.components.layouts.PageLayoutData
-import com.indusjs.statustracker.components.LoginSection
-import com.indusjs.statustracker.components.MarketingSection
 import com.indusjs.statustracker.utils.Redirection
 
 import com.varabyte.kobweb.core.PageContext
@@ -73,9 +67,9 @@ fun initHomePage(ctx: InitRouteContext) {
 fun HomePage(ctx: PageContext) {
     if (AuthManager.isSignedIn()) {
         println("User is signed in")
-        ctx.router.navigateTo(Redirection.COURSE_MANAGEMENT_DOCS)
+        ctx.router.navigateTo(Redirection. CALCULATOR )
     } else {
-        ctx.router.navigateTo(Redirection.COURSE_MANAGEMENT_DOCS) // Navigate to a protected page
+        ctx.router.navigateTo(Redirection. CALCULATOR ) // Navigate to a protected page
         println("User is not signed in")
     }
 }
