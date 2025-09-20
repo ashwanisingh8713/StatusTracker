@@ -74,6 +74,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.kotlin.bootstrap)
         }
 
         // Uncomment the following if you pass `includeServer = true` into the `configAsKobwebApplication` call.

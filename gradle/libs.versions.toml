@@ -9,6 +9,9 @@ ktor = "3.0.3"
 kotlinx-serialization = "1.7.3"
 koin = "4.0.1"
 coil = "3.0.4"
+kotlinBootstrap = "0.1.6"
+
+
 
 [libraries]
 compose-html-core = { module = "org.jetbrains.compose.html:html-core", version.ref = "jetbrains-compose" }
@@ -39,6 +42,8 @@ ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+kotlin-bootstrap = { module = "com.github.stevdza-san:KotlinBootstrap", version.ref = "kotlinBootstrap" }
+
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
