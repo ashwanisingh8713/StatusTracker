@@ -2,6 +2,7 @@ package com.indusjs.statustracker.pages.ujjwal
 
 import androidx.compose.runtime.Composable
 import com.stevdza.san.kotlinbs.models.SpinnerVariant
+import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.core.Page
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.dom.A
@@ -24,9 +25,10 @@ fun ContactPage() {
     fun BSLoader(variant: SpinnerVariant.LargeGrow) {
 
     }
-    Div({ classes("container", "mt-5") }) {
+    Div({ classes("container", "mt-14") }) {
         // Title
-        H2({ classes("text-center", "mb-4") }) { Text("Contact Me") }
+        H2({ classes("text-center", "mb-12") }) { Text("Contact Me") }
+        var align = TextAlign.Center
 
         // Contact Form
 
