@@ -16,6 +16,8 @@ import org.jetbrains.compose.web.dom.Li
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.dom.TextArea
 import org.jetbrains.compose.web.dom.Ul
+import org.jetbrains.compose.web.css.fontSize
+import org.jetbrains.compose.web.css.px
 
 
 @Page
@@ -27,7 +29,16 @@ fun ContactPage() {
     }
     Div({ classes("container", "mt-14") }) {
         // Title
-        H2({ classes("text-center", "mb-12") }) { Text("Contact Me") }
+        H2(
+            attrs = {
+                classes("text-center", "mb-3")
+                style {
+                    fontSize(14.px)
+                }
+            }
+        ) {
+            Text("Contact Me")
+        }
         var align = TextAlign.Center
 
         // Contact Form
